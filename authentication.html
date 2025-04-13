@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Platform - Authentication</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --gray: #6b7280;
+            --light-gray: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: #f9fafb;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .auth-container {
+            max-width: 480px;
+            margin: 2rem auto;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-check-input {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .form-text {
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--gray);
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .form-divider span {
+            padding: 0 1rem;
+        }
+
+        .wallet-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ff9900;
+            color: var(--white);
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .wallet-btn:hover {
+            background-color: #e68a00;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #047857;
+        }
+
+        .form-tab-content {
+            display: none;
+        }
+
+        .form-tab-content.active {
+            display: block;
+        }
+
+        .user-profile {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .profile-main {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-name {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-menu {
+            list-style: none;
+        }
+
+        .profile-menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .profile-menu-link:hover,
+        .profile-menu-link.active {
+            background-color: var(--light-gray);
+            color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .session-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .session-info {
+            flex: 1;
+        }
+
+        .session-device {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-details {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .session-actions {
+            margin-left: 1rem;
+        }
+
+        .session-current {
+            background-color: #e0f2fe;
+            border-color: #bae6fd;
+        }
+
+        .session-current .session-device::after {
+            content: "Current";
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+            background-color: #0ea5e9;
+            color: white;
+            padding: 0.125rem 0.375rem;
+            border-radius: 1rem;
+        }
+
+        .two-factor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .qr-code-container {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 1.5rem;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verification-code {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .verification-code input {
+            width: 3rem;
+            height: 3rem;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.375rem;
+        }
+
+        .backup-codes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .backup-code {
+            font-family: monospace;
+            padding: 0.5rem;
+            background-color: var(--light-gray);
+            border-radius: 0.25rem;
+            text-align: center;
+        }
+
+        footer {
+            background-color: var(--white);
+            padding: 2rem 0;
+            margin-top: auto;
+            box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-profile {
+                flex-direction: column;
+            }
+
+            .profile-sidebar {
+                width: 100%;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">⚕️</span>MedConnect
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="#" id="loginLink">Login</a>
+                    <a href="#" class="btn btn-primary" id="signupLink">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Login/Register Forms -->
+            <div class="auth-container" id="authContainer">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">Login</div>
+                    <div class="auth-tab" data-tab="register">Register</div>
+                </div>
+
+                <div id="alertContainer"></div>
+
+                <!-- Login Form -->
+                <div class="form-tab-content active" id="loginForm">
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                            <div class="form-text">
+                                <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                            </div>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" id="rememberMe" class="form-check-input">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    </form>
+
+                    <div class="form-divider">
+                        <span>or</span>
+                    </div>
+
+                    <button class="wallet-btn" id="connectWalletBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="M22 10h-4a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h4" />
+                        </svg>
+                        Connect Wallet
+                    </button>
+
+                    <div class="auth-footer">
+                        Don't have an account? <a href="#" id="switchToRegisterLink">Sign up</a>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="form-tab-content" id="registerForm">
+                    <form id="registerFormElement">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" id="firstName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" id="lastName" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <input type="password" id="registerPassword" class="form-input" placeholder="••••••••" required>
+                            <div class="form-text">Password must be at least 8 characters</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role" class="form-label">I am a</label>
+                            <select id="role" class="form-select" required>
+                                <option value="">Select role</option>
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                            </select>
+                        </div>
+
+                        <!-- Doctor-specific fields (initially hidden) -->
+                        <div id="doctorFields" style="display: none;">
+                            <div class="form-group">
+                                <label for="specialty" class="form-label">Specialty</label>
+                                <input type="text" id="specialty" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="licenseNumber" class="form-label">License Number</label>
+                                <input type="text" id="licenseNumber" class="form-input">
+                            </div>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+                            <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+
+                    <div class="form-divider">
+                        <span>or</span>
+                    </div>
+
+                    <button class="wallet-btn" id="registerWalletBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="M22 10h-4a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h4" />
+                        </svg>
+                        Register with Wallet
+                    </button>
+
+                    <div class="auth-footer">
+                        Already have an account? <a href="#" id="switchToLoginLink">Login</a>
+                    </div>
+                </div>
+
+                <!-- 2FA Verification (initially hidden) -->
+                <div class="form-tab-content" id="twoFactorForm" style="display: none;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Two-Factor Authentication</h3>
+                    <p style="text-align: center; margin-bottom: 2rem;">Please enter the verification code from your authenticator app</p>
+                    
+                    <form id="twoFactorFormElement">
+                        <div class="verification-code">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="0">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="1">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="2">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="3">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="4">
+                            <input type="text" maxlength="1" class="twofa-digit" data-index="5">
+                        </div>
+
+                        <input type="hidden" id="twoFactorCode">
+                        <input type="hidden" id="tempToken">
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Verify</button>
+                    </form>
+
+                    <div class="form-divider">
+                        <span>or</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="backupCode" class="form-label">Use a backup code</label>
+                        <input type="text" id="backupCode" class="form-input">
+                    </div>
+
+                    <button id="useBackupBtn" class="btn btn-outline" style="width: 100%;">Use Backup Code</button>
+                </div>
+
+                <!-- Forgot Password Form (initially hidden) -->
+                <div class="form-tab-content" id="forgotPasswordForm" style="display: none;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Reset Password</h3>
+                    <p style="text-align: center; margin-bottom: 2rem;">Enter your email address and we'll send you a link to reset your password</p>
+                    
+                    <form id="forgotPasswordFormElement">
+                        <div class="form-group">
+                            <label for="resetEmail" class="form-label">Email</label>
+                            <input type="email" id="resetEmail" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Reset Link</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        Remember your password? <a href="#" id="backToLoginLink">Back to login</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile (initially hidden) -->
+            <div class="user-profile" id="userProfile" style="display: none;">
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <span id="userInitials">JD</span>
+                    </div>
+                    <h3 class="profile-name" id="profileName">John Doe</h3>
+                    <p class="profile-email" id="profileEmail">john@example.com</p>
+                    
+                    <ul class="profile-menu">
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link active" data-section="personalInfo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Personal Info
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" data-section="security">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                Security
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" data-section="sessions">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                    <path d="M6 8h.01M6 12h.01M6 16h.01"></path>
+                                    <path d="M10 8h8M10 12h8M10 16h8"></path>
+                                </svg>
+                                Sessions
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" id="logoutBtn" class="profile-menu-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" id="logoutAllBtn" class="profile-menu-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 8h14M5 8a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm14 0a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"></path>
+                                    <line x1="12" y1="13" x2="12" y2="17"></line>
+                                    <line x1="10" y1="15" x2="14" y2="15"></line>
+                                </svg>
+                                Logout All Devices
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="profile-main">
+                    <!-- Personal Info Section -->
+                    <div class="profile-section active" id="personalInfo">
+                        <h2 class="section-title">Personal Information</h2>
+                        <form id="updateProfileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileFirstName" class="form-label">First Name</label>
+                                    <input type="text" id="profileFirstName" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileLastName" class="form-label">Last Name</label>
+                                    <input type="text" id="profileLastName" class="form-input">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profileEmail" class="form-label">Email</label>
+                                <input type="email" id="profileEmailInput" class="form-input">
+                                <div class="form-text">If you change your email, you'll need to verify it again</div>
+                            </div>
+                            
+                            <!-- Patient-specific fields -->
+<div id="patientInfo" style="display: none;">
+    <div class="form-group">
+        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+        <input type="date" id="dateOfBirth" class="form-input">
+    </div>
+    
+    <div class="form-group">
+        <label for="medicalHistory" class="form-label">Medical History</label>
+        <textarea id="medicalHistory" class="form-input" rows="4"></textarea>
+    </div>
+</div>
+
+<!-- Doctor-specific fields -->
+<div id="doctorInfo" style="display: none;">
+    <div class="form-group">
+        <label for="profileSpecialty" class="form-label">Specialty</label>
+        <input type="text" id="profileSpecialty" class="form-input">
+    </div>
+    
+    <div class="form-group">
+        <label for="profileLicenseNumber" class="form-label">License Number</label>
+        <input type="text" id="profileLicenseNumber" class="form-input">
+    </div>
+</div>
+
+<button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+</div>
+
+<!-- Security Section -->
+<div class="profile-section" id="security" style="display: none;">
+    <h2 class="section-title">Security</h2>
+    
+    <h3 style="margin-bottom: 1rem;">Change Password</h3>
+    <form id="changePasswordForm">
+        <div class="form-group">
+            <label for="currentPassword" class="form-label">Current Password</label>
+            <input type="password" id="currentPassword" class="form-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" id="newPassword" class="form-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+            <input type="password" id="confirmPassword" class="form-input">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Update Password</button>
+    </form>
+    
+    <div class="form-divider"><span>Two-Factor Authentication</span></div>
+    
+    <div id="twoFactorStatus">
+        <div id="twoFactorEnabled" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h4 style="margin-bottom: 0.25rem;">Two-Factor Authentication is enabled</h4>
+                    <p class="form-text">Your account is protected with an authenticator app</p>
+                </div>
+                <button class="btn btn-danger" id="disableTwoFactorBtn">Disable</button>
+            </div>
+            
+            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Backup Codes</h4>
+            <p class="form-text">These backup codes can be used to access your account if you lose access to your device.</p>
+            
+            <div class="backup-codes">
+                <div class="backup-code">ABCD-1234-EFGH</div>
+                <div class="backup-code">IJKL-5678-MNOP</div>
+                <div class="backup-code">QRST-9012-UVWX</div>
+                <div class="backup-code">YZ12-3456-7890</div>
+                <div class="backup-code">ABCD-5678-EFGH</div>
+                <div class="backup-code">IJKL-9012-MNOP</div>
+                <div class="backup-code">QRST-3456-UVWX</div>
+                <div class="backup-code">YZ12-7890-1234</div>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-outline" id="generateNewCodesBtn">Generate New Codes</button>
+                <button class="btn btn-outline" id="downloadCodesBtn">Download Codes</button>
+            </div>
+        </div>
+        
+        <div id="twoFactorDisabled">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h4 style="margin-bottom: 0.25rem;">Two-Factor Authentication is disabled</h4>
+                    <p class="form-text">Add an extra layer of security to your account</p>
+                </div>
+                <button class="btn btn-secondary" id="setupTwoFactorBtn">Set Up</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="twoFactorSetup" style="display: none;">
+        <div class="two-factor-container">
+            <div class="qr-code-container">
+                <!-- QR Code placeholder -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+                    <rect width="180" height="180" fill="#f3f4f6"></rect>
+                    <g fill="#6b7280">
+                        <rect x="30" y="30" width="10" height="10"></rect>
+                        <rect x="40" y="30" width="10" height="10"></rect>
+                        <rect x="50" y="30" width="10" height="10"></rect>
+                        <rect x="60" y="30" width="10" height="10"></rect>
+                        <rect x="70" y="30" width="10" height="10"></rect>
+                        <rect x="30" y="40" width="10" height="10"></rect>
+                        <rect x="70" y="40" width="10" height="10"></rect>
+                        <rect x="30" y="50" width="10" height="10"></rect>
+                        <rect x="50" y="50" width="10" height="10"></rect>
+                        <rect x="70" y="50" width="10" height="10"></rect>
+                        <rect x="30" y="60" width="10" height="10"></rect>
+                        <rect x="70" y="60" width="10" height="10"></rect>
+                        <rect x="30" y="70" width="10" height="10"></rect>
+                        <rect x="40" y="70" width="10" height="10"></rect>
+                        <rect x="50" y="70" width="10" height="10"></rect>
+                        <rect x="60" y="70" width="10" height="10"></rect>
+                        <rect x="70" y="70" width="10" height="10"></rect>
+                        <rect x="100" y="30" width="10" height="10"></rect>
+                        <rect x="110" y="30" width="10" height="10"></rect>
+                        <rect x="120" y="30" width="10" height="10"></rect>
+                        <rect x="130" y="30" width="10" height="10"></rect>
+                        <rect x="140" y="30" width="10" height="10"></rect>
+                        <rect x="100" y="40" width="10" height="10"></rect>
+                        <rect x="140" y="40" width="10" height="10"></rect>
+                        <rect x="100" y="50" width="10" height="10"></rect>
+                        <rect x="120" y="50" width="10" height="10"></rect>
+                        <rect x="140" y="50" width="10" height="10"></rect>
+                        <rect x="100" y="60" width="10" height="10"></rect>
+                        <rect x="140" y="60" width="10" height="10"></rect>
+                        <rect x="100" y="70" width="10" height="10"></rect>
+                        <rect x="110" y="70" width="10" height="10"></rect>
+                        <rect x="120" y="70" width="10" height="10"></rect>
+                        <rect x="130" y="70" width="10" height="10"></rect>
+                        <rect x="140" y="70" width="10" height="10"></rect>
+                        <rect x="30" y="100" width="10" height="10"></rect>
+                        <rect x="40" y="100" width="10" height="10"></rect>
+                        <rect x="50" y="100" width="10" height="10"></rect>
+                        <rect x="60" y="100" width="10" height="10"></rect>
+                        <rect x="70" y="100" width="10" height="10"></rect>
+                        <rect x="30" y="110" width="10" height="10"></rect>
+                        <rect x="70" y="110" width="10" height="10"></rect>
+                        <rect x="30" y="120" width="10" height="10"></rect>
+                        <rect x="50" y="120" width="10" height="10"></rect>
+                        <rect x="70" y="120" width="10" height="10"></rect>
+                        <rect x="30" y="130" width="10" height="10"></rect>
+                        <rect x="70" y="130" width="10" height="10"></rect>
+                        <rect x="30" y="140" width="10" height="10"></rect>
+                        <rect x="40" y="140" width="10" height="10"></rect>
+                        <rect x="50" y="140" width="10" height="10"></rect>
+                        <rect x="60" y="140" width="10" height="10"></rect>
+                        <rect x="70" y="140" width="10" height="10"></rect>
+                    </g>
+                </svg>
+            </div>
+
+            <p>Scan this QR code with your authenticator app</p>
+            <p class="form-text">Or enter this setup key: <strong>ABCD EFGH IJKL MNOP</strong></p>
+            
+            <div style="margin-top: 1.5rem; width: 100%;">
+                <label for="confirmationCode" class="form-label">Enter the code from your app</label>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" id="confirmationCode" class="form-input" style="flex: 1;">
+                    <button class="btn btn-primary" id="verifyTwoFactorBtn">Verify</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-outline" id="cancelTwoFactorBtn">Cancel Setup</button>
+    </div>
+</div>
+
+<!-- Sessions Section -->
+<div class="profile-section" id="sessions" style="display: none;">
+    <h2 class="section-title">Active Sessions</h2>
+    
+    <div class="session-card session-current">
+        <div class="session-info">
+            <div class="session-device">Chrome on Windows</div>
+            <div class="session-details">IP: 192.168.1.1 • Last active: Just now</div>
+        </div>
+    </div>
+    
+    <div class="session-card">
+        <div class="session-info">
+            <div class="session-device">Safari on iPhone</div>
+            <div class="session-details">IP: 192.168.1.2 • Last active: 2 hours ago</div>
+        </div>
+        <div class="session-actions">
+            <button class="btn btn-danger btn-sm" data-session-id="1">Logout</button>
+        </div>
+    </div>
+    
+    <div class="session-card">
+        <div class="session-info">
+            <div class="session-device">Firefox on MacOS</div>
+            <div class="session-details">IP: 192.168.1.3 • Last active: Yesterday</div>
+        </div>
+        <div class="session-actions">
+            <button class="btn btn-danger btn-sm" data-session-id="2">Logout</button>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <button class="btn btn-danger" id="logoutAllSessionsBtn">Logout of All Other Sessions</button>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="copyright">
+                © 2025 MedConnect. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+                <a href="#">Help</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // When the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables to hold UI elements
+        const authContainer = document.getElementById('authContainer');
+        const userProfile = document.getElementById('userProfile');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const formTabContents = document.querySelectorAll('.form-tab-content');
+        const alertContainer = document.getElementById('alertContainer');
+        const loginLink = document.getElementById('loginLink');
+        const signupLink = document.getElementById('signupLink');
+        const loginFormElement = document.getElementById('loginFormElement');
+        const registerFormElement = document.getElementById('registerFormElement');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const backToLoginLink = document.getElementById('backToLoginLink');
+        const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+        const switchToLoginLink = document.getElementById('switchToLoginLink');
+        const doctorFields = document.getElementById('doctorFields');
+        const roleSelect = document.getElementById('role');
+        const twoFactorDigits = document.querySelectorAll('.twofa-digit');
+        const twoFactorCode = document.getElementById('twoFactorCode');
+        const profileMenuLinks = document.querySelectorAll('.profile-menu-link[data-section]');
+        const profileSections = document.querySelectorAll('.profile-section');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutAllBtn = document.getElementById('logoutAllBtn');
+        const setupTwoFactorBtn = document.getElementById('setupTwoFactorBtn');
+        const cancelTwoFactorBtn = document.getElementById('cancelTwoFactorBtn');
+        const twoFactorSetup = document.getElementById('twoFactorSetup');
+        const twoFactorStatus = document.getElementById('twoFactorStatus');
+        const twoFactorEnabled = document.getElementById('twoFactorEnabled');
+        const twoFactorDisabled = document.getElementById('twoFactorDisabled');
+        const disableTwoFactorBtn = document.getElementById('disableTwoFactorBtn');
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const registerWalletBtn = document.getElementById('registerWalletBtn');
+        const patientInfo = document.getElementById('patientInfo');
+        const doctorInfo = document.getElementById('doctorInfo');
+
+        // Tab switching functionality for auth container
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and contents
+                authTabs.forEach(t => t.classList.remove('active'));
+                formTabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}Form`).classList.add('active');
+            });
+        });
+
+        // Switch between login and register forms
+        switchToRegisterLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            authTabs.forEach(t => t.classList.remove('active'));
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="register"]').classList.add('active');
+            document.getElementById('registerForm').classList.add('active');
+        });
+
+        switchToLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            authTabs.forEach(t => t.classList.remove('active'));
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        // Show forgot password form
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.getElementById('forgotPasswordForm').classList.add('active');
+        });
+
+        // Back to login from forgot password
+        backToLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        // Handle role change to show/hide doctor fields
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'doctor') {
+                doctorFields.style.display = 'block';
+            } else {
+                doctorFields.style.display = 'none';
+            }
+        });
+
+        // Navigation links
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Show login form
+            authContainer.style.display = 'block';
+            userProfile.style.display = 'none';
+            authTabs.forEach(t => t.classList.remove('active'));
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        signupLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Show registration form
+            authContainer.style.display = 'block';
+            userProfile.style.display = 'none';
+            authTabs.forEach(t => t.classList.remove('active'));
+            formTabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="register"]').classList.add('active');
+            document.getElementById('registerForm').classList.add('active');
+        });
+
+        // 2FA digit input handling
+        twoFactorDigits.forEach(input => {
+            input.addEventListener('input', function() {
+                const index = parseInt(this.getAttribute('data-index'));
+                
+                // Move to next input
+                if (this.value.length === 1 && index < 5) {
+                    twoFactorDigits[index + 1].focus();
+                }
+                
+                // Update hidden input with full code
+                let code = '';
+                twoFactorDigits.forEach(digit => {
+                    code += digit.value;
+                });
+                twoFactorCode.value = code;
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                const index = parseInt(this.getAttribute('data-index'));
+                
+                // Move to previous input on backspace if current is empty
+                if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                    twoFactorDigits[index - 1].focus();
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Profile menu functionality
+        profileMenuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and hide all sections
+                profileMenuLinks.forEach(l => l.classList.remove('active'));
+                profileSections.forEach(s => s.style.display = 'none');
+                
+                // Add active class to clicked link and show corresponding section
+                this.classList.add('active');
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Show login form
+            authContainer.style.display = 'block';
+            userProfile.style.display = 'none';
+            showAlert('You have been logged out successfully.', 'success');
+        });
+
+        logoutAllBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Show login form
+            authContainer.style.display = 'block';
+            userProfile.style.display = 'none';
+            showAlert('You have been logged out from all devices.', 'success');
+        });
+
+        // Two-factor setup functionality
+        setupTwoFactorBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            twoFactorStatus.style.display = 'none';
+            twoFactorSetup.style.display = 'block';
+        });
+
+        cancelTwoFactorBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            twoFactorSetup.style.display = 'none';
+            twoFactorStatus.style.display = 'block';
+        });
+
+        // Enable/disable 2FA (for demo purposes)
+        document.getElementById('verifyTwoFactorBtn').addEventListener('click', function() {
+            twoFactorSetup.style.display = 'none';
+            twoFactorStatus.style.display = 'block';
+            twoFactorEnabled.style.display = 'block';
+            twoFactorDisabled.style.display = 'none';
+            showAlert('Two-factor authentication has been enabled.', 'success');
+        });
+
+        disableTwoFactorBtn.addEventListener('click', function() {
+            twoFactorEnabled.style.display = 'none';
+            twoFactorDisabled.style.display = 'block';
+            showAlert('Two-factor authentication has been disabled.', 'success');
+        });
+
+        // Form submissions
+        loginFormElement.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Demo: Show 2FA or complete login
+            const show2FA = Math.random() > 0.5;
+            
+            if (show2FA) {
+                formTabContents.forEach(c => c.classList.remove('active'));
+                document.getElementById('twoFactorForm').style.display = 'block';
+                document.getElementById('twoFactorForm').classList.add('active');
+                
+                // Focus on first input
+                document.querySelector('.twofa-digit[data-index="0"]').focus();
+            } else {
+                // Complete login
+                completeLogin();
+            }
+        });
+
+        registerFormElement.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Complete registration and login
+            completeLogin();
+        });
+
+        document.getElementById('twoFactorFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Complete login after 2FA
+            completeLogin();
+        });
+
+        document.getElementById('useBackupBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Complete login with backup code
+            completeLogin();
+        });
+
+        document.getElementById('forgotPasswordFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Show success message
+            showAlert('A password reset link has been sent to your email.', 'success');
+            
+            // Return to login form after 3 seconds
+            setTimeout(function() {
+                formTabContents.forEach(c => c.classList.remove('active'));
+                document.getElementById('loginForm').classList.add('active');
+            }, 3000);
+        });
+
+        document.getElementById('updateProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Show success message
+            showAlert('Your profile has been updated successfully.', 'success');
+        });
+
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Show success message
+            showAlert('Your password has been updated successfully.', 'success');
+            
+            // Clear the form
+            this.reset();
+        });
+
+        // Wallet connection buttons
+        connectWalletBtn.addEventListener('click', function() {
+            // Demo wallet connection
+            showAlert('Wallet connected successfully.', 'success');
+            
+            // Complete login after wallet connection
+            setTimeout(completeLogin, 1000);
+        });
+
+        registerWalletBtn.addEventListener('click', function() {
+            // Demo wallet connection for registration
+            showAlert('Wallet connected successfully.', 'success');
+            
+            // Complete registration after wallet connection
+            setTimeout(completeLogin, 1000);
+        });
+
+        // Helper function to show alerts
+        function showAlert(message, type) {
+            // Clear previous alerts
+            alertContainer.innerHTML = '';
+            
+            // Create and add new alert
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(function() {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.5s';
+                
+                setTimeout(function() {
+                    alertContainer.removeChild(alert);
+                }, 500);
+            }, 5000);
+        }
+
+        // Helper function to complete login process
+        function completeLogin() {
+            // Hide auth container and show user profile
+            authContainer.style.display = 'none';
+            userProfile.style.display = 'flex';
+            
+            // Reset forms
+            loginFormElement.reset();
+            registerFormElement.reset();
+            
+            // Reset profile section display
+            profileSections.forEach(s => s.style.display = 'none');
+            document.getElementById('personalInfo').style.display = 'block';
+            
+            // Reset menu active state
+            profileMenuLinks.forEach(l => l.classList.remove('active'));
+            document.querySelector('.profile-menu-link[data-section="personalInfo"]').classList.add('active');
+            
+            // Show appropriate section based on role
+            const role = roleSelect.value || 'patient';
+            if (role === 'patient') {
+                patientInfo.style.display = 'block';
+                doctorInfo.style.display = 'none';
+            } else {
+                patientInfo.style.display = 'none';
+                doctorInfo.style.display = 'block';
+            }
+            
+            // Update profile information (demo)
+            document.getElementById('userInitials').textContent = 'JD';
+            document.getElementById('profileName').textContent = 'John Doe';
+            document.getElementById('profileEmail').textContent = 'john@example.com';
+            document.getElementById('profileFirstName').value = 'John';
+            document.getElementById('profileLastName').value = 'Doe';
+            document.getElementById('profileEmailInput').value = 'john@example.com';
+            
+            // Update navigation links
+            loginLink.textContent = 'My Profile';
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.style.display = 'none';
+                userProfile.style.display = 'flex';
+            });
+            signupLink.textContent = 'Log Out';
+            signupLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.style.display = 'block';
+                userProfile.style.display = 'none';
+                loginLink.textContent = 'Login';
+                signupLink.textContent = 'Sign Up';
+                
+                // Reset login behavior
+                loginLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    authContainer.style.display = 'block';
+                    userProfile.style.display = 'none';
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    formTabContents.forEach(c => c.classList.remove('active'));
+                    document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+                    document.getElementById('loginForm').classList.add('active');
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAid - AI-Powered Healthcare Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.12.0/cdn.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s infinite;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-10 glass">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="ml-2 text-xl font-bold text-gray-800">MedAid</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-700 hover:text-blue-600 transition duration-300">Features</a>
+                <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 transition duration-300">How It Works</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-blue-600 transition duration-300">Testimonials</a>
+                <a href="/dashboard.html" class="text-gray-700 hover:text-blue-600 transition duration-300">Dashboard</a>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">Login</button>
+                <button class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition duration-300">Sign Up</button>
+            </div>
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white p-4">
+            <a href="#features" class="block py-2 text-gray-700 hover:text-blue-600">Features</a>
+            <a href="#how-it-works" class="block py-2 text-gray-700 hover:text-blue-600">How It Works</a>
+            <a href="#testimonials" class="block py-2 text-gray-700 hover:text-blue-600">Testimonials</a>
+            <a href="/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+            <div class="mt-4 space-y-2">
+                <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">Login</button>
+                <button class="w-full bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">AI-Powered Healthcare Assistant</h1>
+                <p class="text-xl text-gray-600 mb-8">Real-time monitoring, secure blockchain data, and AI diagnostics in one revolutionary platform.</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button class="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition duration-300 shadow-lg">
+                        Get Started
+                    </button>
+                    <button class="bg-white text-blue-600 px-8 py-3 rounded-full hover:bg-gray-100 transition duration-300 shadow-lg border border-blue-600">
+                        Watch Demo
+                    </button>
+                </div>
+                <div class="mt-10 flex items-center space-x-6">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="ml-2 text-gray-700">HIPAA Compliant</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="ml-2 text-gray-700">Blockchain Secured</span>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl animate-pulse-slow">
+                    <img src="/api/placeholder/500/400" alt="MedAid Dashboard" class="rounded-xl shadow-lg" />
+                    <div class="absolute -top-6 -right-6 bg-blue-600 text-white text-sm px-4 py-2 rounded-full shadow-lg">
+                        Live Demo
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <h3 class="text-5xl font-bold text-blue-600">5,000+</h3>
+                    <p class="text-gray-600 mt-2">Patients Helped</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-5xl font-bold text-blue-600">98%</h3>
+                    <p class="text-gray-600 mt-2">Diagnostic Accuracy</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-5xl font-bold text-blue-600">24/7</h3>
+                    <p class="text-gray-600 mt-2">Monitoring & Support</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-5xl font-bold text-blue-600">$2M+</h3>
+                    <p class="text-gray-600 mt-2">Saved in Healthcare Costs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Advanced Features</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Our platform combines cutting-edge technologies to deliver a comprehensive healthcare solution.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Real-time Monitoring</h3>
+                    <p class="text-gray-600">Track vital signs and health metrics in real-time with instant alerts for any concerning changes.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-indigo-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Blockchain Security</h3>
+                    <p class="text-gray-600">Your medical data is secured on the blockchain, ensuring privacy, integrity and patient-controlled access.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-green-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Remote Diagnosis</h3>
+                    <p class="text-gray-600">Connect with healthcare providers remotely through screen sharing and AI-assisted consultations.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-purple-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">AI Diagnostics</h3>
+                    <p class="text-gray-600">Advanced AI analyzes symptoms and provides initial diagnostic suggestions with high accuracy.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-yellow-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Financial Integration</h3>
+                    <p class="text-gray-600">Stellar wallet integration for healthcare payments, donations, and financial assistance.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-red-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Gamified Health</h3>
+                    <p class="text-gray-600">Earn rewards and track your health goals through our engaging gamification system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 px-6 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">How MedAid Works</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Our intuitive platform connects patients, doctors, and AI for seamless healthcare delivery.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-200"></div>
+
+                <!-- Step 1 -->
+                <div class="relative mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12 md:text-right">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Sign Up & Connect</h3>
+                            <p class="text-gray-600">Create your account and connect your health devices or input your medical data manually.</p>
+                        </div>
+                        <div class="flex items-center justify-center z-10">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold">1</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 flex justify-center md:justify-start">
+                            <img src="/api/placeholder/300/200" alt="Sign Up" class="rounded-xl shadow-lg" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative mb-16">
+                    <div class="flex flex-col md:flex-row-reverse items-center">
+                        <div class="md:w-1/2 mb-8 md:mb-0 md:pl-12">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Real-time Monitoring</h3>
+                            <p class="text-gray-600">Your vital signs are monitored in real-time, with AI analysis of any concerning patterns.</p>
+                        </div>
+                        <div class="flex items-center justify-center z-10">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold">2</div>
+                        </div>
+                        <div class="md:w-1/2 md:pr-12 flex justify-center md:justify-end">
+                            <img src="/api/placeholder/300/200" alt="Monitoring" class="rounded-xl shadow-lg" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12 md:text-right">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3">AI Consultation</h3>
+                            <p class="text-gray-600">Receive AI-powered diagnostic suggestions and health recommendations based on your data.</p>
+                        </div>
+                        <div class="flex items-center justify-center z-10">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold">3</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 flex justify-center md:justify-start">
+                            <img src="/api/placeholder/300/200" alt="AI Consultation" class="rounded-xl shadow-lg" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative">
+                    <div class="flex flex-col md:flex-row-reverse items-center">
+                        <div class="md:w-1/2 mb-8 md:mb-0 md:pl-12">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Doctor Connection</h3>
+                            <p class="text-gray-600">Connect with healthcare providers remotely for consultations and follow-ups when needed.</p>
+                        </div>
+                        <div class="flex items-center justify-center z-10">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold">4</div>
+                        </div>
+                        <div class="md:w-1/2 md:pr-12 flex justify-center md:justify-end">
+                            <img src="/api/placeholder/300/200" alt="Doctor Connection" class="rounded-xl shadow-lg" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6 bg-blue-600">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Healthcare Experience?</h2>
+            <p class="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">Join thousands of patients and healthcare providers already using MedAid to improve health outcomes.</p>
+            <button class="bg-white text-blue-600 px-8 py-3 rounded-full hover:bg-blue-50 transition duration-300 shadow-lg text-lg font-medium">
+                Get Started for Free
+            </button>
+            <p class="text-blue-200 mt-6">No credit card required. 30-day free trial.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-6">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="ml-2 text-xl font-bold">MedAid</span>
+                    </div>
+                    <p class="text-gray-400">AI-powered healthcare assistant with real-time monitoring and blockchain security.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Product</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">API</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Integration</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">HIPAA Compliance</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Data Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+                <p>&copy; 2025 MedAid. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const target = document.querySelector(targetId);
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

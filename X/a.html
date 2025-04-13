@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Platform Authentication</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #10b981;
+            --background-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            height: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+        }
+
+        .subheading {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-group.col {
+            flex: 1;
+        }
+
+        .role-radio {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .role-option {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .role-option input {
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .secondary-button {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            margin-top: 0.75rem;
+        }
+
+        .secondary-button:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider::before {
+            margin-right: 0.75rem;
+        }
+
+        .divider::after {
+            margin-left: 0.75rem;
+        }
+
+        .wallet-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: #3b82f6;
+            margin-top: 1rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* 2FA verification screen */
+        .verification-code {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .verification-code input {
+            width: 3rem;
+            height: 3.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .backup-code-link {
+            display: block;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .backup-code-input {
+            display: none;
+        }
+
+        .backup-code-input.active {
+            display: block;
+        }
+
+        #doctorFields {
+            display: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            width: 1.2rem;
+            height: 1.2rem;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card" id="authCard">
+            <div class="auth-header">
+                <img src="/api/placeholder/120/40" alt="Medical Platform Logo" class="logo">
+                <h1>Welcome to Medical Platform</h1>
+                <p class="subheading">Secure healthcare authentication</p>
+            </div>
+
+            <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+
+            <div class="tabs">
+                <div class="tab active" data-form="loginForm">Login</div>
+                <div class="tab" data-form="registerForm">Register</div>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="youremail@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">Show</button>
+                    </div>
+                </div>
+                <button type="submit" id="loginButton">
+                    <span class="spinner" id="loginSpinner"></span>
+                    Log In
+                </button>
+
+                <div class="divider">or</div>
+
+                <button type="button" class="wallet-button" id="walletLoginButton">
+                    Connect Wallet
+                </button>
+
+                <div class="auth-footer">
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm">
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" placeholder="John" required>
+                    </div>
+                    <div class="form-group col">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="youremail@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Create a password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">Show</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>I am a</label>
+                    <div class="role-radio">
+                        <label class="role-option" id="patientOption">
+                            <input type="radio" name="role" value="patient" checked>
+                            Patient
+                        </label>
+                        <label class="role-option" id="doctorOption">
+                            <input type="radio" name="role" value="doctor">
+                            Doctor
+                        </label>
+                    </div>
+                </div>
+
+                <div id="doctorFields">
+                    <div class="form-group">
+                        <label for="specialty">Specialty</label>
+                        <input type="text" id="specialty" placeholder="e.g. Cardiology">
+                    </div>
+                    <div class="form-group">
+                        <label for="licenseNumber">License Number</label>
+                        <input type="text" id="licenseNumber" placeholder="Enter license number">
+                    </div>
+                </div>
+
+                <button type="submit" id="registerButton">
+                    <span class="spinner" id="registerSpinner"></span>
+                    Create Account
+                </button>
+
+                <div class="divider">or</div>
+
+                <button type="button" class="wallet-button" id="walletRegisterButton">
+                    Register with Wallet
+                </button>
+            </form>
+
+            <!-- Two Factor Authentication -->
+            <form class="auth-form" id="twoFactorForm" style="display: none;">
+                <h2>Two-Factor Authentication</h2>
+                <p>Enter the 6-digit code from your authenticator app</p>
+                
+                <div class="verification-code">
+                    <input type="text" maxlength="1" class="code-input" data-index="1">
+                    <input type="text" maxlength="1" class="code-input" data-index="2">
+                    <input type="text" maxlength="1" class="code-input" data-index="3">
+                    <input type="text" maxlength="1" class="code-input" data-index="4">
+                    <input type="text" maxlength="1" class="code-input" data-index="5">
+                    <input type="text" maxlength="1" class="code-input" data-index="6">
+                </div>
+                
+                <button type="submit" id="verifyCodeButton">
+                    <span class="spinner" id="twoFactorSpinner"></span>
+                    Verify
+                </button>
+                
+                <a class="backup-code-link" id="useBackupCodeLink">Use backup code instead</a>
+                
+                <div class="form-group backup-code-input" id="backupCodeField">
+                    <label for="backupCode">Backup Code</label>
+                    <input type="text" id="backupCode" placeholder="Enter your backup code">
+                    <button type="button" id="verifyBackupButton" class="secondary-button">
+                        <span class="spinner" id="backupSpinner"></span>
+                        Verify Backup Code
+                    </button>
+                </div>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form class="auth-form" id="forgotPasswordForm" style="display: none;">
+                <h2>Reset Your Password</h2>
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="youremail@example.com" required>
+                </div>
+                
+                <button type="submit" id="sendResetLinkButton">
+                    <span class="spinner" id="forgotSpinner"></span>
+                    Send Reset Link
+                </button>
+                
+                <button type="button" class="secondary-button" id="backToLoginButton">
+                    Back to Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables to store authentication state
+        let tempToken = '';
+        let walletAddress = '';
+        
+        // DOM Elements
+        const tabs = document.querySelectorAll('.tab');
+        const forms = document.querySelectorAll('.auth-form');
+        const errorAlert = document.getElementById('errorAlert');
+        const successAlert = document.getElementById('successAlert');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const twoFactorForm = document.getElementById('twoFactorForm');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        const doctorFields = document.getElementById('doctorFields');
+        const patientOption = document.getElementById('patientOption');
+        const doctorOption = document.getElementById('doctorOption');
+        const backupCodeField = document.getElementById('backupCodeField');
+        const useBackupCodeLink = document.getElementById('useBackupCodeLink');
+        const codeInputs = document.querySelectorAll('.code-input');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const backToLoginButton = document.getElementById('backToLoginButton');
+        
+        // API Base URL - Replace with your actual backend URL
+        const API_BASE_URL = 'https://api.example.com';
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const formId = tab.getAttribute('data-form');
+                forms.forEach(form => {
+                    form.classList.remove('active');
+                    form.style.display = 'none';
+                });
+                
+                const targetForm = document.getElementById(formId);
+                targetForm.classList.add('active');
+                targetForm.style.display = 'block';
+                
+                clearAlerts();
+            });
+        });
+        
+        // Role selection
+        patientOption.addEventListener('click', () => {
+            patientOption.classList.add('selected');
+            doctorOption.classList.remove('selected');
+            doctorFields.style.display = 'none';
+            document.querySelector('input[name="role"][value="patient"]').checked = true;
+        });
+        
+        doctorOption.addEventListener('click', () => {
+            doctorOption.classList.add('selected');
+            patientOption.classList.remove('selected');
+            doctorFields.style.display = 'block';
+            document.querySelector('input[name="role"][value="doctor"]').checked = true;
+        });
+        
+        // Forgot password link
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showForm(forgotPasswordForm);
+        });
+        
+        // Back to login button
+        backToLoginButton.addEventListener('click', () => {
+            showForm(loginForm);
+        });
+        
+        // Toggle backup code field
+        useBackupCodeLink.addEventListener('click', () => {
+            backupCodeField.classList.toggle('active');
+        });
+        
+        // Password visibility toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                button.textContent = 'Show';
+            }
+        }
+        
+        // 2FA code input handling
+        codeInputs.forEach(input => {
+            input.addEventListener('keyup', (e) => {
+                const index = parseInt(input.getAttribute('data-index'));
+                
+                if (e.key >= 0 && e.key <= 9) {
+                    if (index < 6) {
+                        codeInputs[index].focus();
+                    }
+                } else if (e.key === 'Backspace') {
+                    if (index > 1) {
+                        codeInputs[index - 2].focus();
+                    }
+                }
+            });
+        });
+        
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlerts();
+            showLoading('loginSpinner');
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.message || 'Login failed. Please check your credentials.');
+                    hideLoading('loginSpinner');
+                    return;
+                }
+                
+                // Check if 2FA is required
+                if (data.requireTwoFactor) {
+                    tempToken = data.tempToken;
+                    showForm(twoFactorForm);
+                } else {
+                    // Store token and redirect to dashboard
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                showError('An error occurred. Please try again.');
+                console.error(error);
+            }
+            
+            hideLoading('loginSpinner');
+        });
+        
+        // Register form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlerts();
+            showLoading('registerSpinner');
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            // Create registration payload
+            const payload = {
+                firstName,
+                lastName,
+                email,
+                password,
+                role
+            };
+            
+            // Add doctor-specific fields if doctor role selected
+            if (role === 'doctor') {
+                payload.specialty = document.getElementById('specialty').value;
+                payload.licenseNumber = document.getElementById('licenseNumber').value;
+                
+                if (!payload.specialty || !payload.licenseNumber) {
+                    showError('Specialty and License Number are required for doctors.');
+                    hideLoading('registerSpinner');
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.message || 'Registration failed. Please try again.');
+                    hideLoading('registerSpinner');
+                    return;
+                }
+                
+                // Display success message and store token
+                showSuccess(data.message || 'Registration successful!');
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect to dashboard or verification page
+                setTimeout(() => {
+                    window.location.href = data.user.isVerified ? '/dashboard' : '/verify-email';
+                }, 1500);
+                
+            } catch (error) {
+                showError('An error occurred. Please try again.');
+                console.error(error);
+            }
+            
+            hideLoading('registerSpinner');
+        });
+        
+        // Two Factor Authentication form submission
+        twoFactorForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlerts();
+            showLoading('twoFactorSpinner');
+            
+            // Collect code from input fields
+            let verificationCode = '';
+            codeInputs.forEach(input => {
+                verificationCode += input.value;
+            });
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/2fa/authenticate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tempToken,
+                        token: verificationCode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.message || 'Verification failed. Please try again.');
+                    hideLoading('twoFactorSpinner');
+                    return;
+                }
+                
+                // Store token and redirect to dashboard
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/dashboard';
+                
+            } catch (error) {
+                showError('An error occurred. Please try again.');
+                console.error(error);
+            }
+            
+            hideLoading('twoFactorSpinner');
+        });
+        
+        // Verify backup code
+        document.getElementById('verifyBackupButton').addEventListener('click', async () => {
+            clearAlerts();
+            showLoading('backupSpinner');
+            
+            const backupCode = document.getElementById('backupCode').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/2fa/authenticate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tempToken,
+                        backupCode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.message || 'Backup code verification failed.');
+                    hideLoading('backupSpinner');
+                    return;
+                }
+                
+                // Store token and redirect to dashboard
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/dashboard';
+                
+            } catch (error) {
+                showError('An error occurred. Please try again.');
+                console.error(error);
+            }
+            
+            hideLoading('backupSpinner');
+        });
+        
+        // Forgot Password form submission
+        forgotPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlerts();
+            showLoading('forgotSpinner');
+            
+            const email = document.getElementById('resetEmail').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/forgot-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.message || 'Failed to send reset link.');
+                    hideLoading('forgotSpinner');
+                    return;
+                }
+                
+                showSuccess(data.message || 'If your email is in our system, you will receive a reset link shortly.');
+                setTimeout(() => {
+                    showForm(loginForm);
+                }, 3000);
+                
+            } catch (error) {
+                showError('An error occurred. Please try again.');
+                console.error(error);
+            }
+            
+            hideLoading('forgotSpinner');
+        });
+        
+        // Wallet Login Button
+        document.getElementById('walletLoginButton').addEventListener('click', async () => {
+            clearAlerts();
+            
+            if (typeof window.ethereum === 'undefined') {
+                showError('Please install MetaMask or another Ethereum wallet to continue.');
+                return;
+            }
+            
+            try {
+                // Request account access
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                walletAddress = accounts[0];
+                
+                // Get authentication message from server
+                const messageResponse = await fetch(`${API_BASE_URL}/wallet/auth-message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ walletAddress })
+                });
+                
+                const messageData = await messageResponse.json();
+                
+                if (!messageResponse.ok) {
+                    showError(messageData.message || 'Failed to generate authentication message.');
+                    return;
+                }
+                
+                // Request signature from user's wallet
+                const message = messageData.data.message;
+                const signature = await window.ethereum.request({
+                    method: 'personal_sign',
+                    params: [message, walletAddress]
+                });
+                
+                // Submit wallet login request
+                const loginResponse = await fetch(`${API_BASE_URL}/wallet/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        walletAddress,
+                        signature,
+                        message
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                
+                if (!loginResponse.ok) {
+                    // Check if registration is required
+                    if (loginData.requiresRegistration) {
+                        showError('Wallet not registered. Please register first.');
+                        // Switch to registration tab
+                        tabs[1].click();
+                        return;
+                    }
+                    
+                    showError(loginData.message || 'Login failed. Please try again.');
+                    return;
+                }
+                
+                // Store token and redirect to dashboard
+                localStorage.setItem('token', loginData.token);
+                localStorage.setItem('user', JSON.stringify(loginData.user));
+                window.location.href = '/dashboard';
+                
+            } catch (error) {
+                showError('An error occurred during wallet login. Please try again.');
+                console.error(error);
+            }
+        });
+        
+        // Wallet Register Button
+        document.getElementById('walletRegisterButton').addEventListener('click', async () => {
+            clearAlerts();
+            
+            if (typeof window.ethereum === 'undefined') {
+                showError('Please install MetaMask or another Ethereum wallet to continue.');
+                return;
+            }
+            
+            // Check if required fields are filled
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            if (!firstName || !lastName || !email) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+            
+            // Check doctor-specific fields if doctor role selected
+            if (role === 'doctor') {
+                const specialty = document.getElementById('specialty').value;
+                const licenseNumber = document.getElementById('licenseNumber').value;
+                
+                if (!specialty || !licenseNumber) {
+                    showError('Specialty and License Number are required for doctors.');
+                    return;
+                }
+            }
+            
+            try {
+                // Request account access
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                walletAddress = accounts[0];
+                
+                // Get authentication message from server
+                const messageResponse = await fetch(`${API_BASE_URL}/wallet/auth-message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ walletAddress })
+                });
+                
+                const messageData = await messageResponse.json();
+                
+                if (!messageResponse.ok) {
+                    showError(messageData.message || 'Failed to generate authentication message.');
+                    return;
+                }
+                
+                // Request signature from user's wallet
+                const message = messageData.data.message;
+                const signature = await window.ethereum.request({
+                    method: 'personal_sign',
+                    params: [message, walletAddress]
+                });
+                
+                // Create payload
+                const payload = {
+                    firstName,
+                    lastName,
+                    email,
+                    role,
+                    walletAddress,
+                    signature,
+                    message
+                };
+                
+                // Add doctor-specific fields if doctor role selected
+                if (role === 'doctor') {
+                    payload.specialty = document.getElementById('specialty').value;
+                    payload.licenseNumber = document.getElementById('licenseNumber').value;
+                }
+                
+                // Submit wallet registration request
+                const registerResponse = await fetch(`${API_BASE_URL}/wallet/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const registerData = await registerResponse.json();
+                
+                if (!registerResponse.ok) {
+                    showError(registerData.message || 'Registration failed. Please try again.');
+                    return;
+                }
+                
+                // Display success message and store token
+                showSuccess(registerData.message || 'Registration successful!');
+                localStorage.setItem('token', registerData.token);
+                localStorage.setItem('user', JSON.stringify(registerData.user));
+                
+                // Redirect to dashboard or verification page
+                setTimeout(() => {
+                    window.location.href = registerData.user.isVerified ? '/dashboard' : '/verify-email';
+                }, 1500);
+                
+            } catch (error) {
+                showError('An error occurred during wallet registration. Please try again.');
+                console.error(error);
+            }
+        });
+        
+        // Helper functions
+        function showForm(form) {
+            forms.forEach(f => {
+                f.classList.remove('active');
+                f.style.display = 'none';
+            });
+            
+            form.classList.add('active');
+            form.style.display = 'block';
+            
+            // Reset tabs if switching between login and register
+            if (form === loginForm) {
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else if (form === registerForm) {
+                tabs[1].classList.add('active');
+                tabs[0].classList.remove('active');
+            }
+            
+            clearAlerts();
+        }
+        
+        function showError(message) {
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            successAlert.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            errorAlert.style.display = 'none';
+        }
+        
+        function clearAlerts() {
+            errorAlert.style.display = 'none';
+            successAlert.style.display = 'none';
+            errorAlert.textContent = '';
+            successAlert.textContent = '';
+        }
+        
+        function showLoading(spinnerId) {
+            const spinner = document.getElementById(spinnerId);
+            if (spinner) {
+                spinner.style.display = 'inline-block';
+            }
+        }
+        
+        function hideLoading(spinnerId) {
+            const spinner = document.getElementById(spinnerId);
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+        }
+        
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Redirect to dashboard if already logged in
+                window.location.href = '/dashboard';
+            }
+        });
+    </script>
+</body>
+</html>
