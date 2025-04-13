@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Tools - Screenpipe</title>
+</head>
+<body>
+    <header>
+        <h1>Telehealth Productivity Tools</h1>
+    </header>
+    
+    <main>
+        <!-- Screenpipe will be injected here -->
+        <div id="telehealth-tools-container"></div>
+    </main>
+    <!-- Make sure this is in your HTML file -->
+<div id="screenpipe-container"></div>
+
+<!-- Add this script tag before the closing </body> tag -->
+<script>
+  // Force initialize Screenpipe even if the path detection fails
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get doctor and patient IDs (for testing, using hardcoded values)
+    const doctorId = 'doctor-test';
+    const patientId = 'patient-test';
+    
+    // Create Screenpipe instance
+    const screenpipe = new Screenpipe({
+      doctorId,
+      patientId,
+      captureInterval: 10000,
+      encryptData: true,
+      patientConsentRequired: true,
+      storageLocation: 'cloud'
+    });
+    
+    // Initialize
+    screenpipe.init().then(success => {
+      if (success) {
+        // Create UI
+        const ui = new ScreenpipeUI(screenpipe, 'screenpipe-container');
+        console.log('Screenpipe initialized for testing');
+      } else {
+        console.error('Failed to initialize Screenpipe');
+      }
+    });
+  });
+</script>
+    <!-- Add the Screenpipe script -->
+    <script src="capture.js"></script>
+</body>
+</html>

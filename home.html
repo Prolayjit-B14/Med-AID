@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-Aid Smart Medical System</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --secondary-dark: #27ae60;
+            --accent: #9b59b6;
+            --dark: #34495e;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .hero {
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #3498db11, #9b59b611);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+        }
+        
+        .tabs {
+            margin: 50px 0;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background-color: #eee;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-content h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-card h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-card h3 i {
+            color: var(--primary);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-card {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        
+        .stat-card p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark);
+            margin-top: 5px;
+        }
+        
+        .record-list {
+            list-style: none;
+        }
+        
+        .record-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        
+        .record-title {
+            font-weight: 500;
+        }
+        
+        .record-date {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .record-status {
+            font-size: 14px;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .status-verified {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        footer {
+            margin-top: 100px;
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #4a5568;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    Med-Aid
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#dashboards">Dashboard</a>
+                    <a href="#records">Records</a>
+                    <a href="#telehealth">Telehealth</a>
+                </div>
+                <div class="user-actions">
+                    <button class="btn-outline" id="connectWalletBtn">Connect Web3 ID</button>
+                    <button class="btn-primary" id="loginBtn">Provider Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Next-Gen Healthcare Platform</h1>
+            <p>Secure, decentralized medical records with real-time monitoring and patient-centered care.</p>
+            <button class="btn-primary" id="getStartedBtn">Get Started</button>
+        </section>
+
+        <section class="features" id="features">
+            <div class="feature-card">
+                <i class="fas fa-id-card feature-icon"></i>
+                <h3>Web3 Health Identity</h3>
+                <p>Own your medical identity with blockchain-secured credentials and consent tracking.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-file-medical feature-icon"></i>
+                <h3>Decentralized Records</h3>
+                <p>Secure on-chain storage of your medical history with patient-controlled access.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-desktop feature-icon"></i>
+                <h3>Smart Screen Capture</h3>
+                <p>Enhanced telehealth with intelligent screen-based tracking and productivity tools.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-user-md feature-icon"></i>
+                <h3>Provider Productivity</h3>
+                <p>Time tracking, consultation metrics, and AI-assisted documentation for healthcare workers.</p>
+            </div>
+        </section>
+
+        <section class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="patient">Patient Portal</button>
+                <button class="tab-btn" data-tab="provider">Provider Tools</button>
+                <button class="tab-btn" data-tab="telehealth">Telehealth</button>
+            </div>
+
+            <div class="tab-content active" id="patient-tab">
+                <h3>Secure Patient Portal</h3>
+                <div class="dashboard" id="dashboards">
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-chart-line"></i> Health Overview</h3>
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <p>Current Status</p>
+                                <div class="value" id="healthStatus">Healthy</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Last Check-up</p>
+                                <div class="value" id="lastCheckup">Mar 15, 2025</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Active Prescriptions</p>
+                                <div class="value" id="activePrescriptions">2</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Next Appointment</p>
+                                <div class="value" id="nextAppointment">Apr 22, 2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" id="records">
+                        <h3><i class="fas fa-notes-medical"></i> Medical Records</h3>
+                        <ul class="record-list" id="medicalRecordsList">
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">Annual Physical Exam</div>
+                                    <div class="record-date">Mar 15, 2025</div>
+                                </div>
+                                <span class="record-status status-verified">Verified</span>
+                            </li>
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">Blood Test Results</div>
+                                    <div class="record-date">Mar 10, 2025</div>
+                                </div>
+                                <span class="record-status status-verified">Verified</span>
+                            </li>
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">COVID-19 Vaccination</div>
+                                    <div class="record-date">Feb 05, 2025</div>
+                                </div>
+                                <span class="record-status status-verified">Verified</span>
+                            </li>
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">X-Ray Report</div>
+                                    <div class="record-date">Jan 22, 2025</div>
+                                </div>
+                                <span class="record-status status-verified">Verified</span>
+                            </li>
+                        </ul>
+                        <button class="btn-outline" style="width: 100%; margin-top: 15px;" id="viewAllRecordsBtn">View All Records</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="provider-tab">
+                <h3>Provider Productivity Dashboard</h3>
+                <div class="dashboard">
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-calendar-check"></i> Today's Schedule</h3>
+                        <ul class="record-list" id="providerSchedule">
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">Sarah Johnson - Annual Check-up</div>
+                                    <div class="record-date">09:00 AM - 09:30 AM</div>
+                                </div>
+                                <span class="record-status status-verified">Confirmed</span>
+                            </li>
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">Michael Chen - Follow-up</div>
+                                    <div class="record-date">10:00 AM - 10:30 AM</div>
+                                </div>
+                                <span class="record-status status-verified">Confirmed</span>
+                            </li>
+                            <li class="record-item">
+                                <div>
+                                    <div class="record-title">Emma Davis - Consultation</div>
+                                    <div class="record-date">11:00 AM - 11:30 AM</div>
+                                </div>
+                                <span class="record-status status-pending">Pending</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-chart-bar"></i> Productivity Metrics</h3>
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <p>Consultations Today</p>
+                                <div class="value" id="consultationsToday">5</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Average Duration</p>
+                                <div class="value" id="avgDuration">27 min</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Documentation Time</p>
+                                <div class="value" id="docTime">42 min</div>
+                            </div>
+                            <div class="stat-card">
+                                <p>Patient Satisfaction</p>
+                                <div class="value" id="patientSatisfaction">4.8/5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="telehealth-tab">
+                <h3>Telehealth Platform</h3>
+                <div class="dashboard" id="telehealth">
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-video"></i> Virtual Appointment Room</h3>
+                        <div style="background-color: #f5f5f5; height: 300px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <button class="btn-primary" id="startTelehealthBtn">Start Telehealth Session</button>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-outline" style="flex: 1;"><i class="fas fa-microphone"></i> Mute</button>
+                            <button class="btn-outline" style="flex: 1;"><i class="fas fa-video"></i> Video</button>
+                            <button class="btn-outline" style="flex: 1;"><i class="fas fa-desktop"></i> Share Screen</button>
+                            <button class="btn-danger" style="flex: 1; background-color: var(--danger); color: white;"><i class="fas fa-phone-slash"></i> End</button>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-notes-medical"></i> Session Notes</h3>
+                        <div class="form-group">
+                            <label for="sessionNotes">AI-Assisted Documentation</label>
+                            <textarea class="form-control" id="sessionNotes" rows="8" placeholder="Session notes will appear here during the telehealth consultation..."></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn-outline" style="flex: 1;"><i class="fas fa-save"></i> Save Draft</button>
+                            <button class="btn-primary" style="flex: 1;"><i class="fas fa-signature"></i> Sign & Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Web3 ID Connect Modal -->
+    <div class="modal" id="web3Modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Connect Web3 Health ID</h2>
+                <button class="modal-close" id="closeWeb3Modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Connect your decentralized identity to access your health records securely on the blockchain.</p>
+                <div class="form-group">
+                    <label for="walletAddress">Wallet Address</label>
+                    <input type="text" class="form-control" id="walletAddress" placeholder="0x..." readonly>
+                </div>
+                <div class="form-group">
+                    <label>Available Wallets</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                        <button class="btn-outline"><i class="fab fa-ethereum"></i> MetaMask</button>
+                        <button class="btn-outline"><i class="fas fa-wallet"></i> WalletConnect</button>
+                        <button class="btn-outline"><i class="fas fa-coins"></i> Coinbase Wallet</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="cancelWeb3Connect">Cancel</button>
+                <button class="btn-primary" id="confirmWeb3Connect">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Provider Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Provider Login</h2>
+                <button class="modal-close" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" placeholder="doctor@hospital.org">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="••••••••">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="cancelLogin">Cancel</button>
+                <button class="btn-primary" id="confirmLogin">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Med-Aid</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Patients</h4>
+                    <ul>
+                        <li><a href="#">Find a Doctor</a></li>
+                        <li><a href="#">Patient Portal</a></li>
+                        <li><a href="#">Health Records</a></li>
+                        <li><a href="#">Telehealth</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Providers</h4>
+                    <ul>
+                        <li><a href="#">Provider Portal</a></li>
+                        <li><a href="#">Clinical Tools</a></li>
+                        <li><a href="#">Training</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">HIPAA Compliance</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Med-Aid Smart Medical System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // API endpoints
+        const API_BASE_URL = 'https://api.med-aid.example';
+        const WEB3_API_URL = 'https://web3.med-aid.example';
+        const SCREENPIPE_API_URL = 'https://screenpipe-integration.med-aid.example';
+        
+        // Mock data for Web3 Health ID integration
+        const web3HealthData = {
+            fetchPatientData: async (walletAddress) => {
+                // In a real implementation, this would make an API call to:
+                // ${WEB3_API_URL}/patient/${walletAddress}
+                console.log(`Fetching data for wallet: ${walletAddress}`);
+                
+                // Mock response
+                return {
+                    id: "0x1234567890abcdef",
+                    name: "John Doe",
+                    consents: [
+                        { provider: "General Hospital", granted: "2025-02-15", expires: "2025-08-15" },
+                        { provider: "MedLabs Inc.", granted: "2025-03-10", expires: "2025-09-10" }
+                    ],
+                    records: [
+                        { id: "rec-001", title: "Annual Physical Exam", date: "2025-03-15", status: "verified" },
+                        { id: "rec-002", title: "Blood Test Results", date: "2025-03-10", status: "verified" },
+                        { id: "rec-003", title: "COVID-19 Vaccination", date: "2025-02-05", status: "verified" },
+                        { id: "rec-004", title: "X-Ray Report", date: "2025-01-22", status: "verified" }
+                    ],
+                    healthMetrics: {
+                        status: "Healthy",
+                        lastCheckup: "Mar 15, 2025",
+                        activePrescriptions: 2,
+                        nextAppointment: "Apr 22, 2025"
+                    }
+                };
+            },
+            
+            getRecord: async (recordId) => {
+                // In a real implementation, this would make an API call to:
+                // ${WEB3_API_URL}/records/${recordId}
+                console.log(`Fetching record: ${recordId}`);
+                
+                // Mock response
+                return {
+                    id: recordId,
+                    title: "Annual Physical Exam",
+                    date: "2025-03-15",
+                    provider: "Dr. Sarah Johnson",
+                    providerSignature: "0x9876543210fedcba",
+                    patientSignature: "0x1234567890abcdef",
+                    content: "Patient is in good health. Blood pressure: 120/80. Heart rate: 72 bpm. No concerns at this time.",
+                    attachments: [
+                        { type: "lab", name: "Blood Work Results", hash: "0xabc123..." }
+                        ],
+                    blockchain: {
+                        network: "Base",
+                        blockNumber: 15234567,
+                        timestamp: "2025-03-15T14:30:00Z"
+                    }
+                };
+            },
+            
+            grantConsent: async (providerAddress, duration) => {
+                // In a real implementation: ${WEB3_API_URL}/consent/grant
+                console.log(`Granting consent to provider: ${providerAddress} for ${duration} months`);
+                return { success: true, txHash: "0xabcdef1234567890" };
+            },
+            
+            revokeConsent: async (consentId) => {
+                // In a real implementation: ${WEB3_API_URL}/consent/revoke
+                console.log(`Revoking consent: ${consentId}`);
+                return { success: true, txHash: "0xfedcba0987654321" };
+            }
+        };
+        
+        // Mock data for Screenpipe productivity tracking
+        const screenpipeData = {
+            startSession: async (providerId, patientId) => {
+                // In a real implementation: ${SCREENPIPE_API_URL}/session/start
+                console.log(`Starting session for provider ${providerId} with patient ${patientId}`);
+                return { 
+                    sessionId: "sess-" + Date.now(),
+                    startTime: new Date().toISOString(),
+                    recordingEnabled: true
+                };
+            },
+            
+            endSession: async (sessionId) => {
+                // In a real implementation: ${SCREENPIPE_API_URL}/session/${sessionId}/end
+                console.log(`Ending session: ${sessionId}`);
+                return {
+                    sessionId: sessionId,
+                    duration: "25m 18s",
+                    activityMetrics: {
+                        docTime: "10m 42s",
+                        patientInteraction: "14m 36s"
+                    }
+                };
+            },
+            
+            getProviderMetrics: async (providerId) => {
+                // In a real implementation: ${SCREENPIPE_API_URL}/provider/${providerId}/metrics
+                console.log(`Fetching metrics for provider: ${providerId}`);
+                return {
+                    totalSessions: 5,
+                    averageDuration: "27m",
+                    documentationTime: "42m",
+                    patientSatisfaction: 4.8
+                };
+            },
+            
+            generateNotes: async (sessionId) => {
+                // In a real implementation: ${SCREENPIPE_API_URL}/session/${sessionId}/notes
+                console.log(`Generating notes for session: ${sessionId}`);
+                return {
+                    notes: "Patient reports intermittent headaches for the past week. Vital signs normal. Recommended acetaminophen as needed and increased hydration. Follow-up in 2 weeks if symptoms persist.",
+                    confidence: 0.92,
+                    pendingReview: true
+                };
+            }
+        };
+        
+        // DOM Elements
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const viewAllRecordsBtn = document.getElementById('viewAllRecordsBtn');
+        const startTelehealthBtn = document.getElementById('startTelehealthBtn');
+        
+        const web3Modal = document.getElementById('web3Modal');
+        const loginModal = document.getElementById('loginModal');
+        
+        const closeWeb3Modal = document.getElementById('closeWeb3Modal');
+        const cancelWeb3Connect = document.getElementById('cancelWeb3Connect');
+        const confirmWeb3Connect = document.getElementById('confirmWeb3Connect');
+        
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const cancelLogin = document.getElementById('cancelLogin');
+        const confirmLogin = document.getElementById('confirmLogin');
+        
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Health dashboard elements
+        const healthStatus = document.getElementById('healthStatus');
+        const lastCheckup = document.getElementById('lastCheckup');
+        const activePrescriptions = document.getElementById('activePrescriptions');
+        const nextAppointment = document.getElementById('nextAppointment');
+        
+        // Provider dashboard elements
+        const consultationsToday = document.getElementById('consultationsToday');
+        const avgDuration = document.getElementById('avgDuration');
+        const docTime = document.getElementById('docTime');
+        const patientSatisfaction = document.getElementById('patientSatisfaction');
+        
+        const medicalRecordsList = document.getElementById('medicalRecordsList');
+        const walletAddressInput = document.getElementById('walletAddress');
+        const sessionNotes = document.getElementById('sessionNotes');
+        
+        // Initialize Web3 connection
+        let connectedWallet = null;
+        let currentProvider = null;
+        let currentTelehealthSession = null;
+        
+        // Event listeners
+        connectWalletBtn.addEventListener('click', () => {
+            web3Modal.classList.add('active');
+        });
+        
+        closeWeb3Modal.addEventListener('click', () => {
+            web3Modal.classList.remove('active');
+        });
+        
+        cancelWeb3Connect.addEventListener('click', () => {
+            web3Modal.classList.remove('active');
+        });
+        
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+        
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.classList.remove('active');
+        });
+        
+        cancelLogin.addEventListener('click', () => {
+            loginModal.classList.remove('active');
+        });
+        
+        confirmWeb3Connect.addEventListener('click', async () => {
+            // Simulate wallet connection - in production, this would connect to MetaMask or other wallets
+            connectedWallet = "0x" + Math.random().toString(16).substr(2, 40);
+            walletAddressInput.value = connectedWallet;
+            
+            // Fetch patient data
+            try {
+                const patientData = await web3HealthData.fetchPatientData(connectedWallet);
+                updatePatientDashboard(patientData);
+                connectWalletBtn.textContent = "Connected";
+                connectWalletBtn.classList.remove('btn-outline');
+                connectWalletBtn.classList.add('btn-secondary');
+                web3Modal.classList.remove('active');
+                
+                // Show success message
+                alert("Successfully connected to Web3 Health ID!");
+            } catch (error) {
+                console.error("Error fetching patient data:", error);
+                alert("Failed to connect. Please try again.");
+            }
+        });
+        
+        confirmLogin.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                alert("Please enter both email and password");
+                return;
+            }
+            
+            // Simulate login - in production, this would make an API call
+            currentProvider = {
+                id: "prov-" + Math.random().toString(16).substr(2, 8),
+                name: "Dr. " + email.split('@')[0].replace(/[^a-zA-Z]/g, ' '),
+                speciality: "General Practice",
+                hospital: "Med-Aid General Hospital"
+            };
+            
+            try {
+                // Fetch provider metrics
+                const metrics = await screenpipeData.getProviderMetrics(currentProvider.id);
+                updateProviderDashboard(metrics);
+                
+                loginBtn.textContent = "Dr. " + email.split('@')[0].replace(/[^a-zA-Z]/g, ' ');
+                loginModal.classList.remove('active');
+                
+                // Switch to provider tab
+                switchTab('provider');
+                
+                // Show success message
+                alert("Successfully logged in!");
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert("Login failed. Please try again.");
+            }
+        });
+        
+        // Tab switching functionality
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+        
+        function switchTab(tabId) {
+            // Remove active class from all buttons and tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected button and tab
+            document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+        
+        // Start telehealth session
+        startTelehealthBtn.addEventListener('click', async () => {
+            if (!currentProvider) {
+                alert("Please login as a provider first");
+                loginModal.classList.add('active');
+                return;
+            }
+            
+            try {
+                // Start a telehealth session
+                currentTelehealthSession = await screenpipeData.startSession(
+                    currentProvider.id, 
+                    "patient-" + Math.random().toString(16).substr(2, 8)
+                );
+                
+                startTelehealthBtn.textContent = "Session Active";
+                startTelehealthBtn.disabled = true;
+                
+                // Simulate recording ongoing
+                setTimeout(async () => {
+                    // Generate AI notes
+                    const notesData = await screenpipeData.generateNotes(currentTelehealthSession.sessionId);
+                    sessionNotes.value = notesData.notes;
+                    
+                    // End session after delay
+                    setTimeout(async () => {
+                        const sessionData = await screenpipeData.endSession(currentTelehealthSession.sessionId);
+                        alert(`Session ended. Duration: ${sessionData.duration}`);
+                        
+                        startTelehealthBtn.textContent = "Start Telehealth Session";
+                        startTelehealthBtn.disabled = false;
+                        currentTelehealthSession = null;
+                    }, 5000);
+                }, 3000);
+                
+            } catch (error) {
+                console.error("Error starting telehealth session:", error);
+                alert("Failed to start telehealth session. Please try again.");
+            }
+        });
+        
+        // View all records button
+        viewAllRecordsBtn.addEventListener('click', () => {
+            if (!connectedWallet) {
+                alert("Please connect your Web3 Health ID first");
+                web3Modal.classList.add('active');
+                return;
+            }
+            
+            alert("Redirecting to full records page...");
+            // In a real app, this would navigate to a dedicated records page
+        });
+        
+        // Get started button
+        getStartedBtn.addEventListener('click', () => {
+            if (!connectedWallet) {
+                web3Modal.classList.add('active');
+            } else {
+                alert("Welcome back! Your health records are up to date.");
+            }
+        });
+        
+        // Update patient dashboard with data
+        function updatePatientDashboard(data) {
+            // Update health metrics
+            healthStatus.textContent = data.healthMetrics.status;
+            lastCheckup.textContent = data.healthMetrics.lastCheckup;
+            activePrescriptions.textContent = data.healthMetrics.activePrescriptions;
+            nextAppointment.textContent = data.healthMetrics.nextAppointment;
+            
+            // Update medical records
+            medicalRecordsList.innerHTML = '';
+            data.records.forEach(record => {
+                const recordItem = document.createElement('li');
+                recordItem.className = 'record-item';
+                recordItem.innerHTML = `
+                    <div>
+                        <div class="record-title">${record.title}</div>
+                        <div class="record-date">${record.date}</div>
+                    </div>
+                    <span class="record-status status-${record.status}">${record.status.charAt(0).toUpperCase() + record.status.slice(1)}</span>
+                `;
+                medicalRecordsList.appendChild(recordItem);
+                
+                // Add click event to view record details
+                recordItem.addEventListener('click', async () => {
+                    try {
+                        const recordDetails = await web3HealthData.getRecord(record.id);
+                        alert(`Record: ${recordDetails.title}\nDate: ${recordDetails.date}\nProvider: ${recordDetails.provider}\nDetails: ${recordDetails.content}`);
+                    } catch (error) {
+                        console.error("Error fetching record details:", error);
+                        alert("Failed to fetch record details.");
+                    }
+                });
+            });
+        }
+        
+        // Update provider dashboard with data
+        function updateProviderDashboard(metrics) {
+            consultationsToday.textContent = metrics.totalSessions;
+            avgDuration.textContent = metrics.averageDuration;
+            docTime.textContent = metrics.documentationTime;
+            patientSatisfaction.textContent = metrics.patientSatisfaction + "/5";
+        }
+        
+        // Initialize the application
+        function init() {
+            console.log("Med-Aid Smart Medical System Initialized");
+            
+            // Check if wallet was previously connected (would use localStorage in real app)
+            if (window.localStorage.getItem('connectedWallet')) {
+                connectedWallet = window.localStorage.getItem('connectedWallet');
+                connectWalletBtn.textContent = "Connected";
+                connectWalletBtn.classList.remove('btn-outline');
+                connectWalletBtn.classList.add('btn-secondary');
+                
+                // Fetch patient data
+                web3HealthData.fetchPatientData(connectedWallet)
+                    .then(updatePatientDashboard)
+                    .catch(console.error);
+            }
+        }
+        
+        // Call initialization function
+        init();
+    </script>
+</body>
+</html>

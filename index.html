@@ -7,20 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.12.0/cdn.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .animate-pulse-slow {
-            animation: pulse 3s infinite;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <!-- Navigation -->
@@ -102,6 +92,108 @@
             </div>
         </div>
     </section>
+    <div class="parent">
+        <div class="desc">
+            <button id="init" onclick="toggleChat()">
+                <svg viewBox="0 0 100 100" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Robot Doctor in Button -->
+                    <g class="robot">
+                        <!-- Head/Face -->
+                        <rect x="25" y="15" width="50" height="40" rx="10" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                        
+                        <!-- Antenna -->
+                        <circle class="robot-antenna" cx="50" cy="8" r="3" fill="#8effb4"/>
+                        <line x1="50" y1="8" x2="50" y2="15" stroke="#2c87f0" stroke-width="2"/>
+                        
+                        <!-- Eyes -->
+                        <circle class="robot-eye" cx="35" cy="30" r="7" fill="#2c87f0"/>
+                        <circle class="robot-eye" cx="65" cy="30" r="7" fill="#2c87f0"/>
+                        <circle cx="35" cy="30" r="3" fill="white"/>
+                        <circle cx="65" cy="30" r="3" fill="white"/>
+                        
+                        <!-- Screen -->
+                        <rect x="35" y="45" width="30" height="15" rx="3" fill="#2c87f0" class="message-screen"/>
+                        <text x="50" y="57" font-family="Arial" font-size="10" fill="white" text-anchor="middle" font-weight="bold">HI!</text>
+                        
+                        <!-- Body -->
+                        <rect x="30" y="60" width="40" height="30" rx="5" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                        <circle cx="40" cy="70" r="5" fill="#2c87f0"/>
+                        <circle cx="60" cy="70" r="5" fill="#2c87f0"/>
+                        
+                        <!-- Arms -->
+                        <rect x="15" y="60" width="10" height="25" rx="5" fill="#2c87f0"/>
+                        <rect class="robot-hand" x="75" y="60" width="10" height="25" rx="5" fill="#2c87f0"/>
+                        
+                        <!-- Doctor Details -->
+                        <rect x="40" y="75" width="20" height="5" rx="2" fill="#2c87f0"/>
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <div id="chat-test" style="display: none;">
+        <div class="chat-child" id="chatbot">
+            <div id="chat-box">
+                <div class="chat-header">
+                    <div class="h-child">
+                        <div id="avatar-container">
+                            <svg viewBox="0 0 100 100" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Robot Doctor in Header -->
+                                <g class="robot" transform="scale(0.7) translate(20, 20)">
+                                    <!-- Head/Face -->
+                                    <rect x="25" y="15" width="50" height="40" rx="10" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                                    
+                                    <!-- Antenna -->
+                                    <circle class="robot-antenna" cx="50" cy="8" r="3" fill="#8effb4"/>
+                                    <line x1="50" y1="8" x2="50" y2="15" stroke="#2c87f0" stroke-width="2"/>
+                                    
+                                    <!-- Eyes -->
+                                    <circle class="robot-eye" cx="35" cy="30" r="7" fill="#2c87f0"/>
+                                    <circle class="robot-eye" cx="65" cy="30" r="7" fill="#2c87f0"/>
+                                    <circle cx="35" cy="30" r="3" fill="white"/>
+                                    <circle cx="65" cy="30" r="3" fill="white"/>
+                                    
+                                    <!-- Screen/Mouth -->
+                                    <rect x="35" y="45" width="30" height="15" rx="3" fill="#2c87f0" class="message-screen"/>
+                                    <text x="50" y="57" font-family="Arial" font-size="10" fill="white" text-anchor="middle" font-weight="bold">HI!</text>
+                                    
+                                    <!-- Body -->
+                                    <rect x="30" y="60" width="40" height="30" rx="5" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                                    <circle cx="40" cy="70" r="5" fill="#2c87f0"/>
+                                    <circle cx="60" cy="70" r="5" fill="#2c87f0"/>
+                                    
+                                    <!-- Medical cross symbol -->
+                                    <rect x="43" y="77" width="14" height="3" fill="#ff4757"/>
+                                    <rect x="48.5" y="72" width="3" height="14" fill="#ff4757"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="chat-name">MedBot</span><br>
+                            <span style="color: #8effb4; font-size: 12px">online</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="chat-close" onclick="toggleChat()">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="chatStart">
+                    <!-- Messages will appear here -->
+                </div>
+                
+                <div class="chat-footer">
+                    <input type="text" id="user-input" placeholder="Type your health concern..." onkeypress="handleKeyPress(event)">
+                    <button id="send-btn" onclick="sendMessage()">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Stats Section -->
     <section class="py-12 bg-white">
@@ -342,33 +434,8 @@
             </div>
         </div>
     </footer>
+    <script src="script.js"></script>
 
-    <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const target = document.querySelector(targetId);
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    document.getElementById('mobile-menu').classList.add('hidden');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

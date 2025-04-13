@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agricultural Monitoring | Delta IoT</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Prism.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    
+    <!-- AOS Library for scroll animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- jsPDF and html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Code container styles */
+        .code-container {
+            position: relative;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        /* Image zoom overlay */
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+        
+        .fullscreen-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            height: 4px;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            width: 0%;
+        }
+        
+        /* Floating action button */
+        .floating-action-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            border-radius: 50%;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Pulse animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+        
+        /* Navbar glass effect */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* Section transitions */
+        .section-fade {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+        
+        .section-fade.visible {
+            opacity: 1;
+        }
+        
+        /* Interactive components */
+        .hover-scale {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Comment system */
+        .comment-item {
+            transition: all 0.3s ease;
+        }
+        
+        .comment-item:hover {
+            transform: translateX(5px);
+        }
+        
+        /* Circuit diagram container */
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-container img {
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* Custom tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: #1e40af;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen text-gray-800">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800">
+                            Δ Delta IoT
+                        </h1>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="../index.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">Home</a>
+                        <a href="projects.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">Projects</a>
+                        <a href="components.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">Components</a>
+                        <a href="blog.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">Blog</a>
+                        <a href="contact.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">Contact</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg rounded-lg m-2">
+                <a href="../index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50">Home</a>
+                <a href="projects.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50">Projects</a>
+                <a href="components.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50">Components</a>
+                <a href="blog.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50">Blog</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Toggle Button -->
+    <button id="toggleSidebar" class="fixed top-20 left-4 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed top-16 left-0 w-64 h-full bg-gradient-to-b from-gray-900 to-blue-900 text-white transform -translate-x-64 transition-transform duration-300 z-30 overflow-y-auto shadow-2xl">
+        <div class="py-8 px-6">
+            <h2 class="text-xl font-bold text-center mb-8 text-blue-300 border-b pb-2">
+                <i class="fas fa-book-reader mr-2"></i>Contents
+            </h2>
+            <ul class="space-y-4 text-md">
+                <li>
+                    <a href="#concept" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">📌</span>
+                        <span>Key Concept</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#components" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">🔧</span>
+                        <span>Components</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#connections" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">🔌</span>
+                        <span>Connections</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#circuit-diagram" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">📜</span>
+                        <span>Circuit Diagram</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#prototype-overview" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">🔍</span>
+                        <span>Prototype Model</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#arduino-code" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">💻</span>
+                        <span>Arduino Code</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#simulation-model" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">🎥</span>
+                        <span>Simulation</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#linkedin-post" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">📱</span>
+                        <span>LinkedIn Post</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#comment" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">💬</span>
+                        <span>Comments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#author" class="flex items-center p-2 rounded-lg hover:bg-blue-800/50 transition-all">
+                        <span class="text-blue-400 mr-3">👨‍💻</span>
+                        <span>Author</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Download Options -->
+            <div class="mt-12 border-t border-blue-800 pt-6">
+                <h3 class="text-lg font-semibold mb-4 text-blue-300">
+                    <i class="fas fa-download mr-2"></i>Downloads
+                </h3>
+                <div class="space-y-3">
+                    <button onclick="generatePDF()" class="w-full flex items-center p-2 bg-blue-700 rounded hover:bg-blue-600 transition-all">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        <span>PDF Documentation</span>
+                    </button>
+                    <button onclick="downloadCode()" class="w-full flex items-center p-2 bg-blue-700 rounded hover:bg-blue-600 transition-all">
+                        <i class="fas fa-code mr-2"></i>
+                        <span>Arduino Code</span>
+                    </button>
+                    <button onclick="downloadCircuit()" class="w-full flex items-center p-2 bg-blue-700 rounded hover:bg-blue-600 transition-all">
+                        <i class="fas fa-microchip mr-2"></i>
+                        <span>Circuit Diagram</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <header class="mb-12">
+            <div data-aos="fade-down" data-aos-delay="100" class="text-center">
+                <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800">
+                    Smart Agricultural Monitoring
+                </h1>
+                <div class="flex justify-center items-center mb-4">
+                    <div class="h-px w-12 bg-blue-400"></div>
+                    <p class="mx-4 text-xl text-gray-700">
+                        By <a href="#author" class="text-blue-600 hover:underline font-semibold">Prolayjit Biswas</a>
+                    </p>
+                    <div class="h-px w-12 bg-blue-400"></div>
+                </div>
+                <p class="text-gray-600 flex items-center justify-center">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    <span>Published: February 23, 2025</span>
+                    <span class="mx-3">•</span>
+                    <i class="far fa-clock mr-2"></i>
+                    <span>10 min read</span>
+                </p>
+                
+                <!-- Share buttons -->
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button class="tooltip inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-all">
+                        <i class="fab fa-twitter mr-2"></i> Share
+                        <span class="tooltip-text">Share on Twitter</span>
+                    </button>
+                    <button class="tooltip inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-all">
+                        <i class="fab fa-linkedin mr-2"></i> Share
+                        <span class="tooltip-text">Share on LinkedIn</span>
+                    </button>
+                    <button class="tooltip inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-all">
+                        <i class="far fa-bookmark mr-2"></i> Save
+                        <span class="tooltip-text">Bookmark</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Concept Section -->
+        <section id="concept" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🌱</span>
+                    Key Concept
+                </h2>
+                <p class="text-gray-700 text-lg leading-relaxed">
+                    The Smart Agriculture Monitoring System is an IoT-based solution that integrates Arduino Uno with various sensors 
+                    to monitor and control agricultural conditions in real-time. The system collects environmental data including soil moisture, 
+                    temperature, humidity, and light conditions, then processes this information to provide alerts and automated actions, 
+                    optimizing farming operations.
+                </p>
+                <div class="mt-6 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                    <h3 class="font-bold text-blue-800 mb-2">Key Benefits:</h3>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-500 mr-2 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Real-time monitoring of key environmental factors</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-500 mr-2 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Automated irrigation based on soil moisture</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-500 mr-2 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Early detection of adverse conditions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-500 mr-2 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Reduced water usage and operational costs</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section id="components" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🔧</span>
+                    Components Required
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Component Cards -->
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-microchip text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Arduino Uno</h3>
+                        </div>
+                        <p class="text-gray-600">Microcontroller that processes sensor data and controls components</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="far fa-lightbulb text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">LED Indicators</h3>
+                        </div>
+                        <p class="text-gray-600">Red, Green, Blue LEDs to indicate different system states</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-temperature-high text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Temperature Sensor</h3>
+                        </div>
+                        <p class="text-gray-600">TMP36 sensor for measuring ambient temperature</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-volume-up text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Buzzer</h3>
+                        </div>
+                        <p class="text-gray-600">Provides audible alerts for critical conditions</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-desktop text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">LCD Display</h3>
+                        </div>
+                        <p class="text-gray-600">Shows real-time sensor readings and status messages</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-toggle-on text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Relay Module</h3>
+                        </div>
+                        <p class="text-gray-600">SPDT relay for controlling the DC motor/pump</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-tint text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Soil Moisture Sensor</h3>
+                        </div>
+                        <p class="text-gray-600">Measures soil moisture content for irrigation control</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-sun text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Light Sensor (LDR)</h3>
+                        </div>
+                        <p class="text-gray-600">Detects ambient light levels for day/night monitoring</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 shadow-md hover-scale border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-fan text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">DC Motor</h3>
+                        </div>
+                        <p class="text-gray-600">Simulates an irrigation pump or mechanical farming task</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-center">
+                    <a href="components.html" class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center">
+                        <i class="fas fa-th-list mr-2"></i>
+                        View All Components
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connections Section -->
+        <section id="connections" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🔌</span>
+                    Connections
+                </h2>
+                
+                <div class="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-4 text-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        Important Wiring Instructions
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-indigo-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">Ensure all components are properly grounded to prevent electrical noise and interference.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-indigo-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">Connect power supplies correctly to avoid short circuits and component damage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-indigo-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">Follow the pin mapping carefully to ensure correct sensor readings.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-indigo-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">Use appropriate resistors for LEDs and other components to prevent damage.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Connections Accordion -->
+                <div class="space-y-4">
+                    <!-- Arduino Connections -->
+                    <div class="connection-accordion border border-blue-200 rounded-xl overflow-hidden">
+                        <button class="connection-header w-full flex justify-between items-center bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-100 p-4 text-indigo-800 font-bold text-lg hover:bg-indigo-200 transition-all">
+                            <span class="flex items-center">
+                                <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">1</span>
+                                Arduino Uno Connections
+                            </span>
+                            <svg class="accordion-arrow h-6 w-6 transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="connection-content p-4 bg-white hidden">
+                            <ul class="list-disc pl-8 text-gray-700 space-y-2">
+                                <li><b class="text-indigo-700">5V</b> → VCC of LCD, Soil Sensor, Temp Sensor, Relay Module</li>
+                                <li><b class="text-indigo-700">GND</b> → GND of all components</li>
+                                <li><b class="text-indigo-700">D3</b> → Red LED (D1) via 220Ω resistor</li>
+                                <li><b class="text-indigo-700">D4</b> → Green LED (D3) via 220Ω resistor</li>
+                                <li><b class="text-indigo-700">D5</b> → Blue LED (D2) via 220Ω resistor</li>
+                                <li><b class="text-indigo-700">D6</b> → Buzzer (Piezo1)</li>
+                                <li><b class="text-indigo-700">D7</b> → Relay IN (via NPN transistor)</li>
+                                <li><b class="text-indigo-700">A0</b> → Soil Moisture Sensor Output</li>
+                                <li><b class="text-indigo-700">A1</b> → Temperature Sensor Output</li>
+                                <li><b class="text-indigo-700">A4</b> → LCD SDA (I2C)</li>
+                                <li><b class="text-indigo-700">A5</b> → LCD SCL (I2C)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Soil Moisture Sensor -->
+                    <div class="connection-accordion border border-blue-200 rounded-xl overflow-hidden">
+                        <button class="connection-header w-full flex justify-between items-center bg-gradient-to-r from-green-100 via-green-50 to-green-100 p-4 text-green-800 font-bold text-lg hover:bg-green-200 transition-all">
+                            <span class="flex items-center">
+                                <span class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">2</span>
+                                Soil Moisture Sensor
+                            </span>
+                            <svg class="accordion-arrow h-6 w-6 transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="connection-content p-4 bg-white hidden">
+                            <ul class="list-disc pl-8 text-gray-700 space-y-2">
+                                <li><b class="text-green-700">VCC</b> → Arduino 5V</li>
+                                <li><b class="text-green-700">GND</b> → Arduino GND</li>
+                                <li><b class="text-green-700">SIGNAL</b> → Arduino A0</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Temperature Sensor -->
+                    <div class="connection-accordion border border-blue-200 rounded-xl overflow-hidden">
+                        <button class="connection-header w-full flex justify-between items-center bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 p-4 text-yellow-800 font-bold text-lg hover:bg-yellow-200 transition-all">
+                            <span class="flex items-center">
+                                <span class="bg-yellow-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">3</span>
+                                Temperature Sensor (TMP36)
+                            </span>
+                            <svg class="accordion-arrow h-6 w-6 transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="connection-content p-4 bg-white hidden">
+                            <ul class="list-disc pl-8 text-gray-700 space-y-2">
+                                <li><b class="text-yellow-700">VCC</b> → Arduino 5V</li>
+                                <li><b class="text-yellow-700">GND</b> → Arduino GND</li>
+                                <li><b class="text-yellow-700">SIGNAL</b> → Arduino A1</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- More connection accordions... -->
+                    <!-- LDR Sensor -->
+                    <div class="connection-accordion border border-blue-200 rounded-xl overflow-hidden">
+                        <button class="connection-header w-full flex justify-between items-center bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 p-4 text-gray-800 font-bold text-lg hover:bg-gray-200 transition-all">
+                            <span class="flex items-center">
+                                <span class="bg-gray-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">4</span>
+                                LDR (Light Sensor)
+                            </span>
+                            <svg class="accordion-arrow h-6 w-6 transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="connection-content p-4 bg-white hidden">
+                            <ul class="list-disc pl-8 text-gray-700 space-y-2">
+                                <li><b class="text-gray-700">VCC</b> → Arduino 5V</li>
+                                <li><b class="text-gray-700">GND</b> → Arduino GND</li>
+                                <li><b class="text-gray-700">SIGNAL</b> → Arduino A2</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Circuit Diagram Section -->
+        <section id="circuit-diagram" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">📜</span>
+                    Circuit Diagram
+                </h2>
+                
+                <div class="image-container mx-auto max-w-3xl">
+                    <img src="assets/agriclturalcircuit.png" alt="Circuit Diagram" class="w-full h-auto cursor-zoom-in" onclick="zoomImage(this)">
+                    <div class="mt-4 text-center">
+                        <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Click to enlarge</span>
+                    </div>
+                </div>
+                
+                <!-- Circuit diagram explanation -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Circuit Explanation</h3>
+                    <p class="text-gray-700">
+                        The circuit diagram shows the complete wiring setup for the Smart Agricultural Monitoring system. 
+                        The Arduino Uno serves as the central controller, with various sensors connected to analog pins for 
+                        data collection. Digital pins control the LED indicators, buzzer, and relay module. The system uses 
+                        a common ground and 5V supply from the Arduino for most components, with the DC motor powered separately 
+                        through the relay module.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prototype Overview Section -->
+        <section id="prototype-overview" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🔍</span>
+                    Prototype Overview
+                </h2>
+                
+                <div class="image-container mx-auto max-w-3xl">
+                    <img src="assets/agriculturmodel.png" alt="Prototype Overview" class="w-full h-auto cursor-zoom-in" onclick="zoomImage(this)">
+                    <div class="mt-4 text-center">
+                        <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Click to enlarge</span>
+                    </div>
+                </div>
+                
+                <!-- Description of prototype -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Physical Setup</h3>
+                        <p class="text-gray-700">
+                            The prototype is constructed on a breadboard for easy testing and modification. The Arduino Uno is 
+                            the central component with sensors and actuators arranged for optimal functionality. The LED indicators 
+                            are positioned for clear visibility, while the LCD display shows real-time data readings.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Operational Features</h3>
+                        <p class="text-gray-700">
+                            This model demonstrates real-time monitoring of soil moisture, temperature, and light conditions. 
+                            When soil moisture falls below the threshold, the system activates the water pump (DC motor) automatically. 
+                            The buzzer provides alerts for critical conditions, enhancing the system's ability to prevent crop damage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arduino Code Section -->
+        <section id="arduino-code" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">💻</span>
+                    Arduino Code
+                </h2>
+                
+                <div class="mb-6 flex justify-between items-center">
+                    <p class="text-gray-700">Complete source code for the Smart Agricultural Monitoring System:</p>
+                    <div class="flex space-x-3">
+                        <a href="https://github.com/your-repo-link" target="_blank" class="bg-gray-800 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-700 transition-all flex items-center">
+                            <i class="fab fa-github mr-2"></i>
+                            View on GitHub
+                        </a>
+                        <button onclick="copyCode()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-all flex items-center">
+                            <i class="far fa-copy mr-2"></i>
+                            Copy Code
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Code Block -->
+                <div class="code-container line-numbers max-h-[500px] overflow-auto">
+                    <pre class="language-cpp"><code id="arduinoCode">
+#include &lt;DHT.h>
+
+// Define sensor pins
+#define DHTPIN 12       // DHT sensor data pin
+#define DHTTYPE DHT11   // DHT sensor type
+#define LDR_PIN A0      // LDR sensor analog pin
+#define SOIL_SENSOR A1  // Soil moisture sensor analog pin
+#define RELAY_PIN 13    // Relay for Motor control (Pump)
+#define BUZZER 9        // Buzzer pin
+
+// LED Indicators
+#define RED_LED 3       // Dry Soil
+#define GREEN_LED 4     // Moderate Moisture
+#define YELLOW_LED 5    // Wet Soil
+#define TEMP_LED 6      // High Temperature
+#define LIGHT_LED 7     // Light Condition
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+    Serial.begin(9600);
+    dht.begin();
+    
+    pinMode(LDR_PIN, INPUT);
+    pinMode(SOIL_SENSOR, INPUT);
+    pinMode(RELAY_PIN, OUTPUT);
+    pinMode(BUZZER, OUTPUT);
+    pinMode(RED_LED, OUTPUT);
+    pinMode(YELLOW_LED, OUTPUT);
+    pinMode(GREEN_LED, OUTPUT);
+    pinMode(TEMP_LED, OUTPUT);
+    pinMode(LIGHT_LED, OUTPUT);
+    
+    digitalWrite(RELAY_PIN, HIGH); // Relay OFF initially (Active LOW)
+}
+
+void loop() {
+    float temp = dht.readTemperature();
+    float humidity = dht.readHumidity();
+
+    if (isnan(temp) || isnan(humidity)) {
+        Serial.println("DHT sensor error!");
+        return;
+    }
+
+    int lightValue = analogRead(LDR_PIN);
+    int soilValue = 1023 - analogRead(SOIL_SENSOR);
+
+    Serial.print("Temp: "); Serial.print(temp);
+    Serial.print("C  Humidity: "); Serial.print(humidity);
+    Serial.print("%  Light: "); Serial.print(lightValue);
+    Serial.print("  Soil Moisture: "); Serial.println(soilValue);
+
+    // Soil Moisture Control
+    if (soilValue < 300) {  
+        digitalWrite(RED_LED, HIGH);
+        digitalWrite(YELLOW_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(RELAY_PIN, HIGH);
+        digitalWrite(BUZZER, HIGH);
+        delay(500);
+        digitalWrite(BUZZER, LOW);
+    } 
+    else if (soilValue < 700) {  
+        digitalWrite(RED_LED, LOW);
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(YELLOW_LED, LOW);
+        digitalWrite(RELAY_PIN, LOW);
+    } 
+    else {  
+        digitalWrite(RED_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(YELLOW_LED, HIGH);
+        digitalWrite(RELAY_PIN, LOW);
+        tone(BUZZER, 2050);
+        delay(500);
+        noTone(BUZZER);
+    }
+
+    // Temperature Alert
+    if (temp > 35) { 
+        digitalWrite(TEMP_LED, HIGH);
+        digitalWrite(BUZZER, HIGH);
+        delay(500);
+        digitalWrite(BUZZER, LOW);
+    } else {
+        digitalWrite(TEMP_LED, LOW);
+    }
+
+    // Light Condition
+    digitalWrite(LIGHT_LED, lightValue > 800 ? LOW : HIGH);
+
+    delay(2000);
+}</code></pre>
+                </div>
+                
+                <!-- Code explanation tabs -->
+                <div class="mt-8">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px">
+                            <button data-tab="overview" class="code-tab-btn active-tab py-2 px-4 text-center border-b-2 border-blue-600 text-blue-600 font-medium text-sm">
+                                Overview
+                            </button>
+                            <button data-tab="sensor-reading" class="code-tab-btn py-2 px-4 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                Sensor Reading
+                            </button>
+                            <button data-tab="control-logic" class="code-tab-btn py-2 px-4 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                Control Logic
+                            </button>
+                            <button data-tab="alerts" class="code-tab-btn py-2 px-4 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                Alert System
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <div class="code-tab-content" id="overview-content">
+                        <div class="p-4 bg-gray-50 rounded-b-lg">
+                            <p class="text-gray-700">
+                                This Arduino code implements a comprehensive agricultural monitoring system that reads data from multiple sensors, 
+                                processes the information, and controls various output devices. The system monitors soil moisture, temperature, 
+                                humidity, and light conditions to automate irrigation and provide alerts for critical conditions.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-tab-content hidden" id="sensor-reading-content">
+                        <div class="p-4 bg-gray-50 rounded-b-lg">
+                            <p class="text-gray-700">
+                                The sensor reading section collects data from the DHT11 temperature/humidity sensor, soil moisture sensor, 
+                                and LDR (Light Dependent Resistor). The code processes raw analog readings and converts them to useful values. 
+                                For the soil moisture sensor, the value is inverted (1023 - reading) to make higher values correspond to higher moisture levels.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-tab-content hidden" id="control-logic-content">
+                        <div class="p-4 bg-gray-50 rounded-b-lg">
+                            <p class="text-gray-700">
+                                The control logic uses threshold-based decision making to manage system behavior. For soil moisture, 
+                                it uses three ranges: dry (&lt;300), moderate (300-700), and wet (&gt;700). Each condition activates different 
+                                LED indicators and controls the relay that operates the irrigation pump. This ensures optimal water management 
+                                for plants based on actual soil conditions.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-tab-content hidden" id="alerts-content">
+                        <div class="p-4 bg-gray-50 rounded-b-lg">
+                            <p class="text-gray-700">
+                                The alert system uses both visual (LEDs) and audible (buzzer) indicators to notify about critical conditions. 
+                                The buzzer sounds when soil is too dry or too wet, requiring attention. A temperature alert is triggered when 
+                                readings exceed 35°C, warning of potentially harmful conditions for crops. The light sensor activates an indicator 
+                                based on ambient light levels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation Model Section -->
+        <section id="simulation-model" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🎥</span>
+                    Prototype Simulation
+                </h2>
+                
+                <div class="aspect-w-16 aspect-h-9 mx-auto max-w-3xl rounded-xl overflow-hidden shadow-lg">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen title="Simulation Model" class="w-full h-full"></iframe>
+                </div>
+                
+                <!-- Video explanation -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-play text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800">Setup Demonstration</h3>
+                        </div>
+                        <p class="text-gray-700">
+                            The video shows the complete hardware setup and connection process for the Smart Agricultural Monitoring system.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-cogs text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800">Working Demonstration</h3>
+                        </div>
+                        <p class="text-gray-700">
+                            Watch the system respond to different soil moisture, temperature, and light conditions in real-time.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-laptop-code text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800">Code Explanation</h3>
+                        </div>
+                        <p class="text-gray-700">
+                            The video includes a walkthrough of the Arduino code, explaining how different components interact and respond to sensor inputs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LinkedIn Post Section -->
+        <section id="linkedin-post" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">📱</span>
+                    Share on LinkedIn
+                </h2>
+                
+                <div class="bg-blue-50 border border-blue-200 p-6 rounded-xl">
+                    <div class="flex items-start">
+                        <img src="assets/profile-pic.jpg" alt="Prolayjit Biswas" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-900">Prolayjit Biswas</h3>
+                            <p class="text-gray-600 text-sm">IoT Developer | Electronics Engineer</p>
+                            <p class="text-gray-600 text-xs mt-1">12h • 🌎</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-gray-800">
+                            Excited to share my latest IoT project: Smart Agricultural Monitoring System! 🌱
+                            <br><br>
+                            This Arduino-based solution helps farmers monitor soil moisture, temperature, and light conditions in real-time, automating irrigation when needed. The system uses multiple sensors and provides alerts for critical conditions through visual and audible indicators.
+                            <br><br>
+                            Tech stack:
+                            • Arduino Uno
+                            • DHT11 Temperature/Humidity Sensor
+                            • Soil Moisture Sensor
+                            • Light Sensor (LDR)
+                            • Relay Module for Pump Control
+                            <br><br>
+                            Check out the full project documentation on my portfolio: [link]
+                            <br><br>
+                            #IoT #Agriculture #SmartFarming #Arduino #Sustainability
+                        </p>
+                        
+                        <div class="mt-4">
+                            <img src="assets/linkedin-preview.jpg" alt="Project Preview" class="w-full h-auto rounded-lg">
+                        </div>
+                        
+                        <div class="mt-4 flex items-center justify-between text-gray-600">
+                            <div class="flex items-center">
+                                <span class="bg-blue-100 text-blue-800 rounded-full p-1 mr-1">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </span>
+                                <span class="bg-red-100 text-red-800 rounded-full p-1 mr-1">
+                                    <i class="fas fa-heart"></i>
+                                </span>
+                                <span>154</span>
+                            </div>
+                            <div>
+                                42 comments • 28 shares
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-3 border-t border-gray-200 pt-2">
+                            <button class="flex items-center justify-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                                <i class="far fa-thumbs-up mr-2"></i>
+                                Like
+                            </button>
+                            <button class="flex items-center justify-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                                <i class="far fa-comment-alt mr-2"></i>
+                                Comment
+                            </button>
+                            <button class="flex items-center justify-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                                <i class="far fa-share-square mr-2"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center mx-auto">
+                        <i class="fab fa-linkedin mr-2"></i>
+                        Post to LinkedIn
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comments Section -->
+        <section id="comment" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">💬</span>
+                    Comments
+                </h2>
+                
+                <!-- Comment Form -->
+                <div class="mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Leave a Comment</h3>
+                    <form id="comment-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="name" class="block text-gray-700 mb-2">Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="comment" class="block text-gray-700 mb-2">Comment</label>
+                            <textarea id="comment" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">
+                            Post Comment
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Comments List -->
+                <div class="space-y-6">
+                    <!-- Comment 1 -->
+                    <div class="comment-item bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-start">
+                            <img src="assets/comment-avatar1.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold text-gray-900">John Doe</h4>
+                                <p class="text-gray-500 text-sm">March 15, 2025</p>
+                                <p class="mt-2 text-gray-700">
+                                    This is an impressive project! I've been looking for an affordable solution to monitor my small garden. 
+                                    Have you considered adding Wi-Fi connectivity to send the data to a mobile app?
+                                </p>
+                                <div class="mt-3 flex space-x-4">
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-thumbs-up mr-1"></i> Like (12)
+                                    </button>
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-comment mr-1"></i> Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Comment 2 -->
+                    <div class="comment-item bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-start">
+                            <img src="assets/comment-avatar2.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold text-gray-900">Emma Wilson</h4>
+                                <p class="text-gray-500 text-sm">March 12, 2025</p>
+                                <p class="mt-2 text-gray-700">
+                                    The project looks great! As an agricultural engineer, I've been working on similar systems. 
+                                    What threshold values are you using for soil moisture to trigger irrigation? I found that 
+                                    different crops have vastly different requirements.
+                                </p>
+                                <div class="mt-3 flex space-x-4">
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-thumbs-up mr-1"></i> Like (8)
+                                    </button>
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-comment mr-1"></i> Reply
+                                    </button>
+                                </div>
+                                
+                                <!-- Reply to comment 2 -->
+                                <div class="mt-4 ml-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                    <div class="flex items-start">
+                                        <img src="assets/profile-pic.jpg" alt="Author" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <h5 class="font-bold text-gray-900">Prolayjit Biswas <span class="text-blue-600 text-sm">(Author)</span></h5>
+                                            <p class="text-gray-500 text-sm">March 12, 2025</p>
+                                            <p class="mt-2 text-gray-700">
+                                                Thanks, Emma! You're absolutely right about crop-specific requirements. For this prototype, 
+                                                I've set the threshold at 300-700 range for moderate moisture, but the code is designed to be 
+                                                easily configurable. I'm working on adding a UI component where users can adjust thresholds 
+                                                for different crops.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Comment 3 -->
+                    <div class="comment-item bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-start">
+                            <img src="assets/comment-avatar3.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold text-gray-900">Michael Chen</h4>
+                                <p class="text-gray-500 text-sm">March 10, 2025</p>
+                                <p class="mt-2 text-gray-700">
+                                    Have you considered adding a solar panel to make this truly off-grid? I'm working on similar systems 
+                                    for remote agricultural monitoring and power is always a concern.
+                                </p>
+                                <div class="mt-3 flex space-x-4">
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-thumbs-up mr-1"></i> Like (5)
+                                    </button>
+                                    <button class="text-blue-600 text-sm hover:text-blue-800">
+                                        <i class="far fa-comment mr-1"></i> Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button class="px-6 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all">
+                        Load More Comments
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Author Section -->
+        <section id="author" class="mb-16 scroll-mt-20">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">👨‍💻</span>
+                    About the Author
+                </h2>
+                
+                <div class="flex flex-col md:flex-row items-center md:items-start">
+                    <div class="mb-6 md:mb-0 md:mr-8">
+                        <img src="assets/profile-pic.jpg" alt="Prolayjit Biswas" class="w-40 h-40 object-cover rounded-full border-4 border-blue-200 shadow-lg">
+                    </div>
+                    
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Prolayjit Biswas</h3>
+                        <p class="text-blue-600 text-lg mb-4">IoT Developer & Electronics Engineer</p>
+                        
+                        <p class="text-gray-700 mb-4">
+                            Prolayjit is an experienced IoT developer with a passion for creating smart solutions for real-world problems. 
+                            With a background in Electronics Engineering and over 5 years of experience in embedded systems development, 
+                            he specializes in agricultural technology and environmental monitoring systems.
+                        </p>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-gray-800 mb-2">Areas of Expertise:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Arduino</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Raspberry Pi</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">IoT Prototyping</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Sensor Networks</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">PCB Design</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">AgTech</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-600 hover:text-blue-600 transition-all">
+                                <i class="fab fa-linkedin text-2xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-blue-600 transition-all">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-blue-600 transition-all">
+                                <i class="fas fa-globe text-2xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-blue-600 transition-all">
+                                <i class="fas fa-envelope text-2xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Related Projects Section -->
+        <section class="mb-16">
+            <div data-aos="fade-up" class="bg-white rounded-2xl p-8 shadow-xl border border-blue-100">
+                <h2 class="text-3xl font-bold mb-6 text-blue-800 flex items-center">
+                    <span class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">🔗</span>
+                    Related Projects
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Related Project 1 -->
+                    <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                        <img src="assets/related-project1.jpg" alt="Smart Irrigation System" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Smart Irrigation System</h3>
+                            <p class="text-gray-600 mb-4">Automated water management solution using soil sensors and weather data</p>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 flex items-center">
+                                View Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Project 2 -->
+                    <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                        <img src="assets/related-project2.jpg" alt="Greenhouse Automation" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Greenhouse Automation</h3>
+                            <p class="text-gray-600 mb-4">Complete climate control and monitoring system for greenhouses</p>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 flex items-center">
+                                View Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Project 3 -->
+                    <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                        <img src="assets/related-project3.jpg" alt="Crop Disease Detection" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Crop Disease Detection</h3>
+                            <p class="text-gray-600 mb-4">AI-powered camera system to identify plant diseases early</p>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 flex items-center">
+                                View Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-900 to-blue-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-1">
+                    <h3 class="text-2xl font-bold text-blue-300 mb-4">Delta IoT</h3>
+                    <p class="text-gray-300 mb-4">
+                        Creating innovative IoT solutions for a smarter, more connected world.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-all">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-all">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-all">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold text-blue-300 mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-300 hover:text-white transition-all">Home</a></li>
+                        <li><a href="projects.html" class="text-gray-300 hover:text-white transition-all">Projects</a></li>
+                        <li><a href="components.html" class="text-gray-300 hover:text-white transition-all">Components</a></li>
+                        <li><a href="blog.html" class="text-gray-300 hover:text-white transition-all">Blog</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white transition-all">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold text-blue-300 mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-all">Documentation</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-all">Tutorials</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-all">Support</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-all">GitHub</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-all">Forum</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold text-blue-300 mb-4">Newsletter</h3>
+                    <p class="text-gray-300 mb-4">Subscribe to our newsletter for updates:</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="submit" class="bg-blue-600 px-4 py-2 rounded-r-lg hover:bg-blue-700 transition-all">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-700 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Delta IoT. All rights reserved. | <a href="#" class="hover:text-white">Privacy Policy</a> | <a href="#" class="hover:text-white">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Image fullscreen overlay -->
+    <div class="fullscreen-overlay" id="imageOverlay">
+        <span class="close-btn" onclick="closeZoom()">&times;</span>
+        <img id="zoomedImage" src="">
+    </div>
+
+    <!-- Floating back to top button -->
+    <button id="back-to-top" class="floating-action-btn hidden p-3 bg-blue-600 text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Initialize AOS animations
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Initialize Prism.js
+            Prism.highlightAll();
+            
+            // Accordion functionality
+            const accordionHeaders = document.querySelectorAll('.connection-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const arrow = this.querySelector('.accordion-arrow');
+                    
+                    content.classList.toggle('hidden');
+                    arrow.classList.toggle('rotate-180');
+                });
+            });
+            
+            // Code tabs functionality
+            const codeTabs = document.querySelectorAll('.code-tab-btn');
+            codeTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.code-tab-btn').forEach(t => {
+                        t.classList.remove('active-tab', 'border-blue-600', 'text-blue-600');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active-tab', 'border-blue-600', 'text-blue-600');
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    // Hide all content
+                    document.querySelectorAll('.code-tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show selected content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-content`).classList.remove('hidden');
+                });
+            });
+            
+            // Sidebar toggle
+            const toggleSidebarBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            
+            toggleSidebarBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('-translate-x-64');
+                sidebar.classList.toggle('translate-x-0');
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Back to top button
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.remove('hidden');
+                } else {
+                    backToTopBtn.classList.add('hidden');
+                }
+                
+                // Update progress bar
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById("progressBar").style.width = scrolled + "%";
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        });
+        
+        // Image zoom functionality
+        function zoomImage(img) {
+            const overlay = document.getElementById('imageOverlay');
+            const zoomedImg = document.getElementById('zoomedImage');
+            
+            zoomedImg.src = img.src;
+            overlay.style.display = 'flex';
+        }
+        
+        function closeZoom() {
+            document.getElementById('imageOverlay').style.display = 'none';
+        }
+        
+        // Copy code to clipboard
+        function copyCode() {
+            const code = document.getElementById('arduinoCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            });
+        }
+        
+        // Generate PDF documentation
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.text('Smart Agricultural Monitoring System', 10, 10);
+            doc.text('Documentation', 10, 20);
+            doc.text('By Prolayjit Biswas', 10, 30);
+            doc.text('Generated: ' + new Date().toLocaleDateString(), 10, 40);
+            
+            doc.save('smart-agricultural-monitoring.pdf');
+        }
+        
+        // Download code
+        function downloadCode() {
+            const code = document.getElementById('arduinoCode').textContent;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'agricultural_monitoring.ino';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Download circuit diagram
+        function downloadCircuit() {
+            // In a real implementation, this would download the high-resolution circuit diagram
+            alert('Circuit diagram download functionality will be implemented soon!');
+        }
+    </script>
+</body>
+</html>

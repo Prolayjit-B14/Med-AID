@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAid Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        .parent {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+        
+        .desc {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        #init {
+            background-color: #2c87f0;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        #init:hover {
+            background-color: #1a68c9;
+            transform: scale(1.05);
+        }
+        
+        #chat-test {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .chat-child {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background-color: #2c87f0;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .h-child {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #avatar-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .chat-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        #chat-box {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        #chatStart {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .msg {
+            background-color: #f0f4f8;
+            padding: 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            align-self: flex-start;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.4;
+        }
+        
+        .user-msg {
+            background-color: #2c87f0;
+            color: white;
+            align-self: flex-end;
+        }
+        
+        .emoji {
+            font-size: 18px;
+        }
+        
+        .opt {
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .opt div {
+            background-color: #e6f0ff;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            color: #2c87f0;
+            transition: all 0.2s ease;
+        }
+        
+        .opt div:hover {
+            background-color: #2c87f0;
+            color: white;
+        }
+        
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        #send-btn {
+            background-color: #2c87f0;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #send-btn:hover {
+            background-color: #1a68c9;
+        }
+        
+        .typing {
+            display: flex;
+            padding: 10px;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background-color: #aaa;
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.5s infinite ease-in-out;
+        }
+        
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .health-category {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .category-btn {
+            background-color: #e6f0ff;
+            border: none;
+            border-radius: 18px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #2c87f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-btn:hover {
+            background-color: #2c87f0;
+            color: white;
+        }
+        
+        /* Robot Animation */
+        @keyframes blink {
+            0%, 45%, 55%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.1); }
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-20deg); }
+            75% { transform: rotate(20deg); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .robot {
+            animation: float 4s infinite ease-in-out;
+        }
+        
+        .robot-eye {
+            animation: blink 4s infinite;
+            transform-origin: center center;
+        }
+        
+        .robot-hand {
+            animation: wave 3s infinite ease-in-out;
+            transform-origin: center top;
+        }
+        
+        .message-screen {
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        .robot-antenna {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .button-text {
+            font-weight: bold;
+            font-size: 16px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="parent">
+        <div class="desc">
+            <button id="init" onclick="toggleChat()">
+                <svg viewBox="0 0 100 100" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Robot Doctor in Button -->
+                    <g class="robot">
+                        <!-- Head/Face -->
+                        <rect x="25" y="15" width="50" height="40" rx="10" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                        
+                        <!-- Antenna -->
+                        <circle class="robot-antenna" cx="50" cy="8" r="3" fill="#8effb4"/>
+                        <line x1="50" y1="8" x2="50" y2="15" stroke="#2c87f0" stroke-width="2"/>
+                        
+                        <!-- Eyes -->
+                        <circle class="robot-eye" cx="35" cy="30" r="7" fill="#2c87f0"/>
+                        <circle class="robot-eye" cx="65" cy="30" r="7" fill="#2c87f0"/>
+                        <circle cx="35" cy="30" r="3" fill="white"/>
+                        <circle cx="65" cy="30" r="3" fill="white"/>
+                        
+                        <!-- Screen -->
+                        <rect x="35" y="45" width="30" height="15" rx="3" fill="#2c87f0" class="message-screen"/>
+                        <text x="50" y="57" font-family="Arial" font-size="10" fill="white" text-anchor="middle" font-weight="bold">HI!</text>
+                        
+                        <!-- Body -->
+                        <rect x="30" y="60" width="40" height="30" rx="5" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                        <circle cx="40" cy="70" r="5" fill="#2c87f0"/>
+                        <circle cx="60" cy="70" r="5" fill="#2c87f0"/>
+                        
+                        <!-- Arms -->
+                        <rect x="15" y="60" width="10" height="25" rx="5" fill="#2c87f0"/>
+                        <rect class="robot-hand" x="75" y="60" width="10" height="25" rx="5" fill="#2c87f0"/>
+                        
+                        <!-- Doctor Details -->
+                        <rect x="40" y="75" width="20" height="5" rx="2" fill="#2c87f0"/>
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <div id="chat-test" style="display: none;">
+        <div class="chat-child" id="chatbot">
+            <div id="chat-box">
+                <div class="chat-header">
+                    <div class="h-child">
+                        <div id="avatar-container">
+                            <svg viewBox="0 0 100 100" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Robot Doctor in Header -->
+                                <g class="robot" transform="scale(0.7) translate(20, 20)">
+                                    <!-- Head/Face -->
+                                    <rect x="25" y="15" width="50" height="40" rx="10" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                                    
+                                    <!-- Antenna -->
+                                    <circle class="robot-antenna" cx="50" cy="8" r="3" fill="#8effb4"/>
+                                    <line x1="50" y1="8" x2="50" y2="15" stroke="#2c87f0" stroke-width="2"/>
+                                    
+                                    <!-- Eyes -->
+                                    <circle class="robot-eye" cx="35" cy="30" r="7" fill="#2c87f0"/>
+                                    <circle class="robot-eye" cx="65" cy="30" r="7" fill="#2c87f0"/>
+                                    <circle cx="35" cy="30" r="3" fill="white"/>
+                                    <circle cx="65" cy="30" r="3" fill="white"/>
+                                    
+                                    <!-- Screen/Mouth -->
+                                    <rect x="35" y="45" width="30" height="15" rx="3" fill="#2c87f0" class="message-screen"/>
+                                    <text x="50" y="57" font-family="Arial" font-size="10" fill="white" text-anchor="middle" font-weight="bold">HI!</text>
+                                    
+                                    <!-- Body -->
+                                    <rect x="30" y="60" width="40" height="30" rx="5" fill="white" stroke="#2c87f0" stroke-width="2"/>
+                                    <circle cx="40" cy="70" r="5" fill="#2c87f0"/>
+                                    <circle cx="60" cy="70" r="5" fill="#2c87f0"/>
+                                    
+                                    <!-- Medical cross symbol -->
+                                    <rect x="43" y="77" width="14" height="3" fill="#ff4757"/>
+                                    <rect x="48.5" y="72" width="3" height="14" fill="#ff4757"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="chat-name">MedBot</span><br>
+                            <span style="color: #8effb4; font-size: 12px">online</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="chat-close" onclick="toggleChat()">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="chatStart">
+                    <!-- Messages will appear here -->
+                </div>
+                
+                <div class="chat-footer">
+                    <input type="text" id="user-input" placeholder="Type your health concern..." onkeypress="handleKeyPress(event)">
+                    <button id="send-btn" onclick="sendMessage()">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat is initially hidden
+        let chatVisible = false;
+        let conversationStarted = false;
+        
+        // Toggle chat visibility
+        function toggleChat() {
+            chatVisible = !chatVisible;
+            document.getElementById('chat-test').style.display = chatVisible ? 'block' : 'none';
+            
+            // Initialize chat if it's the first time opening
+            if (chatVisible && !conversationStarted) {
+                initChat();
+                conversationStarted = true;
+            }
+        }
+        
+        // Initialize chat with welcome message
+        function initChat() {
+            const chatStart = document.getElementById('chatStart');
+            chatStart.innerHTML = '';
+            
+            // Add welcome messages
+            addBotMessage("Hello 👋");
+            
+            setTimeout(() => {
+                addBotMessage("Welcome to MedBot, your 24/7 medical assistant. I'm your AI health companion. How can I assist you today?");
+            }, 500);
+            
+            setTimeout(() => {
+                // Add category buttons
+                addBotMessage("You can select one of these common topics or type your question:");
+                
+                const categories = document.createElement('div');
+                categories.className = 'health-category';
+                
+                const topics = [
+                    "First Aid", 
+                    "Symptoms", 
+                    "Medications", 
+                    "Find a Doctor", 
+                    "Emergency Help",
+                    "Health Tips"
+                ];
+                
+                topics.forEach(topic => {
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
+                    btn.textContent = topic;
+                    btn.onclick = () => handleCategorySelect(topic);
+                    categories.appendChild(btn);
+                });
+                
+                chatStart.appendChild(categories);
+                
+                // Scroll to bottom
+                chatStart.scrollTop = chatStart.scrollHeight;
+            }, 1000);
+        }
+        
+        // Handle category selection
+        function handleCategorySelect(category) {
+            addUserMessage(category);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Process based on category selected
+            setTimeout(() => {
+                removeTypingIndicator();
+                
+                switch(category) {
+                    case "First Aid":
+                        addBotMessage("What first aid information do you need? I can help with:");
+                        const firstAidTopics = document.createElement('div');
+                        firstAidTopics.className = 'health-category';
+                        
+                        const topics = ["Cuts & Wounds", "Burns", "Choking", "CPR Basics", "Sprains"];
+                        
+                        topics.forEach(topic => {
+                            const btn = document.createElement('button');
+                            btn.className = 'category-btn';
+                            btn.textContent = topic;
+                            btn.onclick = () => handleFirstAidTopic(topic);
+                            firstAidTopics.appendChild(btn);
+                        });
+                        
+                        document.getElementById('chatStart').appendChild(firstAidTopics);
+                        break;
+                        
+                    case "Symptoms":
+                        addBotMessage("Please describe your symptoms in detail, and I'll try to provide some general information. Remember, this is not a replacement for professional medical advice.");
+                        break;
+                        
+                    case "Medications":
+                        addBotMessage("I can provide general information about medications. What would you like to know about?");
+                        break;
+                        
+                    case "Find a Doctor":
+                        addBotMessage("I can help you find healthcare providers. Please share your location or specialty you're looking for.");
+                        break;
+                        
+                    case "Emergency Help":
+                        addBotMessage("If you're experiencing a medical emergency, please call emergency services (911) immediately. Don't wait for a chat response.");
+                        addBotMessage("For non-emergency situations, I can guide you on what steps to take next.");
+                        break;
+                        
+                    case "Health Tips":
+                        addBotMessage("Here are some general health tips:");
+                        addBotMessage("• Stay hydrated - drink at least 8 glasses of water daily\n• Exercise regularly - aim for 30 minutes most days\n• Get 7-9 hours of quality sleep\n• Eat a balanced diet rich in fruits and vegetables\n• Practice stress management techniques");
+                        break;
+                }
+            }, 1500);
+        }
+        
+        // Handle first aid topics
+        function handleFirstAidTopic(topic) {
+            addUserMessage(topic);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Process based on first aid topic
+            setTimeout(() => {
+                removeTypingIndicator();
+                
+                switch(topic) {
+                    case "Cuts & Wounds":
+                        addBotMessage("For minor cuts and wounds:");
+                        addBotMessage("1. Clean your hands with soap and water\n2. Clean the wound with mild soap and running water\n3. Apply gentle pressure with a clean cloth to stop bleeding\n4. Apply an antibiotic ointment\n5. Cover with a sterile bandage\n\nSeek medical attention if the wound is deep, bleeding heavily, or shows signs of infection (increased pain, redness, swelling).");
+                        break;
+                        
+                    case "Burns":
+                        addBotMessage("For minor burns:");
+                        addBotMessage("1. Cool the burn with cool (not cold) running water for 10-15 minutes\n2. Apply a gentle moisturizer or aloe vera gel\n3. Cover loosely with a sterile bandage\n4. Take an over-the-counter pain reliever if needed\n\nSeek immediate medical attention for major burns or burns on the face, hands, feet, genitals, or over joints.");
+                        break;
+                        
+                    case "Choking":
+                        addBotMessage("If someone is choking but can speak, cough, or breathe, encourage them to keep coughing.");
+                        addBotMessage("For severe choking (cannot speak or breathe):\n1. Stand behind the person and wrap your arms around their waist\n2. Place your fist just above their navel (belly button)\n3. Grasp your fist with your other hand\n4. Press hard into the abdomen with quick, upward thrusts\n5. Repeat until the object is expelled\n\nFor infants, use back blows and chest thrusts instead.");
+                        break;
+                        
+                    case "CPR Basics":
+                        addBotMessage("Basic CPR steps (adults):");
+                        addBotMessage("1. Ensure the scene is safe\n2. Check for responsiveness\n3. Call emergency services (911)\n4. Place the person on their back on a firm surface\n5. Position your hands in the center of their chest\n6. Perform chest compressions: Push hard and fast (100-120 compressions per minute) to a depth of at least 2 inches\n7. Allow the chest to completely recoil between compressions\n\nNote: This is just a basic overview. Proper CPR training is strongly recommended.");
+                        break;
+                        
+                    case "Sprains":
+                        addBotMessage("For sprains, remember RICE:");
+                        addBotMessage("R - Rest: Avoid activities that cause pain\nI - Ice: Apply ice for 15-20 minutes several times daily\nC - Compression: Use an elastic bandage to reduce swelling\nE - Elevation: Raise the injured area above heart level when possible\n\nSeek medical attention if you can't bear weight, there's significant swelling, or you hear a popping sound at the time of injury.");
+                        break;
+                }
+            }, 1500);
+        }
+        
+        // Add a message from the bot
+        function addBotMessage(message) {
+            const chatStart = document.getElementById('chatStart');
+            const msgElement = document.createElement('p');
+            msgElement.className = 'msg';
+            msgElement.textContent = message;
+            chatStart.appendChild(msgElement);
+            
+            // Scroll to bottom
+            chatStart.scrollTop = chatStart.scrollHeight;
+        }
+        
+        // Add a message from the user
+        function addUserMessage(message) {
+            const chatStart = document.getElementById('chatStart');
+            const msgElement = document.createElement('p');
+            msgElement.className = 'msg user-msg';
+            msgElement.textContent = message;
+            chatStart.appendChild(msgElement);
+            
+            // Scroll to bottom
+            chatStart.scrollTop = chatStart.scrollHeight;
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const chatStart = document.getElementById('chatStart');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'msg typing';
+            typingIndicator.id = 'typing-indicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('span');
+                typingIndicator.appendChild(dot);
+            }
+            
+            chatStart.appendChild(typingIndicator);
+            chatStart.scrollTop = chatStart.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Send user message
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim();
+            
+            if (message === '') return;
+            
+            // Add user message to chat
+            addUserMessage(message);
+            
+            // Clear input field
+            userInput.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Process user message (in a real app, this would involve AI/ML processing)
+            setTimeout(() => {
+                removeTypingIndicator();
+                processUserMessage(message);
+            }, 1500);
+        }
+        
+        // Process user message
+        function processUserMessage(message) {
+            // This is where you would integrate with an actual medical AI system
+            // For now, we'll just respond with some generic responses based on keywords
+            
+            message = message.toLowerCase();
+            
+            if (message.includes('headache') || message.includes('head pain') || message.includes('migraine')) {
+                addBotMessage("Headaches can be caused by many factors including stress, dehydration, lack of sleep, or underlying conditions.");
+                addBotMessage("For mild headaches, you might try:\n• Drinking water if you're dehydrated\n• Taking a break from screens\n• Over-the-counter pain relievers as directed\n• Applying a cool compress to your forehead\n\nIf headaches are severe, persistent, or accompanied by other symptoms like vision changes or fever, please consult a healthcare provider.");
+            } 
+            else if (message.includes('fever') || message.includes('temperature')) {
+                addBotMessage("Fever is usually a sign that your body is fighting an infection. For adults, a temperature over 100.4°F (38°C) is generally considered a fever.");
+                addBotMessage("To manage a fever:\n• Rest and stay hydrated\n• Take over-the-counter fever reducers as directed\n• Use a light blanket if you have chills\n\nSeek medical attention if:\n• Temperature exceeds 103°F (39.4°C)\n• Fever lasts more than 3 days\n• You have a serious underlying condition\n• You have other concerning symptoms");
+            }
+            else if (message.includes('cough') || message.includes('cold') || message.includes('flu')) {
+                addBotMessage("For coughs, colds, and flu-like symptoms:");
+                addBotMessage("• Rest and get plenty of fluids\n• Use honey (if over 1 year old) for cough\n• Try saline nasal sprays for congestion\n• Use over-the-counter medications as directed for symptom relief\n\nConsult a doctor if symptoms are severe, persistent, or if you have difficulty breathing.");
+            }
+            else if (message.includes('thank')) {
+                addBotMessage("You're welcome! Is there anything else I can help you with today?");
+            }
+            else if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                addBotMessage("Hello! How can I assist with your health questions today?");
+            }
+            else {
+                addBotMessage("I understand you're asking about: " + message);
+                addBotMessage("While I aim to provide helpful health information, please remember I'm a simple chatbot demonstration. For actual health concerns, please consult with a healthcare professional.");
+                addBotMessage("Is there a specific health topic I can help you learn more about?");
+            }
+        }
+        
+        // Handle Enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
